@@ -1,0 +1,53 @@
+﻿@model IEnumerable<OnlineShop.Models.WareHouse>
+
+@{ ViewData["Title"] = "Danh sách các hãng";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="dashboard_contents">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="dashboard_title_area">
+                    <div class="pull-left">
+                        <div class="dashboard__title">
+                            <h3>Danh sách mã giảm giá</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="invoice">
+                    <div class="invoice__detail">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Tên hãng</th>
+                                    </tr>
+                                </thead>
+
+
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td class="author">@item.WareHouseId %</td>
+                                            <td class="detail">@item.</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

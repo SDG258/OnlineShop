@@ -1,0 +1,52 @@
+﻿@model IEnumerable<OnlineShop.Models.Ram>
+
+@{ ViewData["Title"] = "Thêm Ram";
+   Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+    <div class="dashboard_contents">
+        <div class="container">
+            <form action="@Url.Action("AddRam", "Rams", new { area = "Admin" })" method="post">
+                <div class="credit_modules">
+                    <div class="row">
+                        <div class="col-md-12">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="payment_info modules__content">
+                                <div class="form-group">
+                                    <label for="card_number">Dung lượng</label>
+                                    <input name="Memory" id="card_number" type="text" class="text_field" placeholder="Vui lòng nhập dung lượng ram sản phẩm...">
+                                </div>
+                                <label for="name">Các ram đã có</label>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <div class="select-wrap select-wrap2">
+                                                <select name="" id="name">
+                                                    <option>Nhấp vào để xem</option>
+                                                    @foreach (var item in Model)
+                                                    {
+                                                        <option>@item.Memory</option>
+                                                    }
+                                                </select>
+                                                <span class="lnr lnr-chevron-down"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+
+                                        <button type="submit" class="btn btn--round btn--default">Thêm</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>

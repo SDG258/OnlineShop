@@ -1,0 +1,63 @@
+﻿@model IEnumerable<OnlineShop.Models.Discount>
+
+@{ ViewData["Title"] = "Danh sách mã giảm giá";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="dashboard_contents">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="dashboard_title_area">
+                    <div class="pull-left">
+                        <div class="dashboard__title">
+                            <h3>Danh sách mã giảm giá</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="invoice">
+                    <div class="invoice__detail">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Giảm</th>
+                                        <th>Mã</th>
+                                        <th>Số lượng</th>
+                                        <th>Đã dùng</th>
+                                        <th>Ghi chú</th>
+                                        <th>Ngày bắt đầu</th>
+                                        <th>Ngày kết thúc</th>
+                                    </tr>
+                                </thead>
+
+
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                    <tr>
+                                        <td class="author">@item.DiscountPercent %</td>
+                                        <td class="detail">@item.DiscountCode</td>
+                                        <td>@item.AmountOf</td>
+                                        <td>@item.Used</td>
+                                        <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width:32px">@item.Note</td>
+                                        <td>@item.StartDate</td>
+                                        <td>@item.EndDate</td>
+                                    </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
