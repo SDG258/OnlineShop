@@ -149,18 +149,18 @@ namespace OnlineShop.Controllers
                 //Send Mail
                 var message = new MimeMessage();
                 message.From.Add(new MailboxAddress("Test project", "aps.netcore.dev@gmail.com"));
-                message.To.Add(new MailboxAddress("ASP.NET Shopping", user.Email));
+                message.To.Add(new MailboxAddress("ASP.NET Shopping", userForDb.Email));
                 message.Subject = "Test send mail";
 
-                user.Code = randomNumberString;
-                _context.Users.Update(user);
+                userForDb.Code = randomNumberString;
+                _context.Users.Update(userForDb);
                 await _context.SaveChangesAsync();
 
                 string myHostUrl = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
 
                 message.Body = new TextPart("html")
                 {
-                    Text = "<strong>From ASP.NET Shopping</strong>" + "<br>" + "<strong>" + myHostUrl + "/" + user.UserId + "/" + randomNumberString
+                    Text = "<strong>From ASP.NET Shopping</strong>" + "<br>" + "<strong>" + myHostUrl + "?UserId=" + user.UserId + "&Code=" + randomNumberString
                 };
                 using (var client = new SmtpClient())
                 {
@@ -173,32 +173,74 @@ namespace OnlineShop.Controllers
             }
             return View();
         }
-
-        [HttpGet("{id}/{code}")]
-        public async Task<IActionResult> GetQueryAsync(int id, string code)
+        public async Task<IActionResult> Details(int? id, int? code)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user != null)
+            if (id == null)
             {
-                if (code == user.Code)
-                {
-                    user.Code = null;
-                    _context.Users.Update(user);
-                    await _context.SaveChangesAsync();
-
-                    //Save Session
-                    UserSession userSession = new UserSession()
-                    {
-                        Id = id,
-                        Email = user.Email,
-                    };
-                    HttpContext.Session.SetString("User", JsonConvert.SerializeObject(userSession));
-
-                    return Redirect("~/Users/ChangePassword");
-                }
+                return NotFound();
             }
-            return Redirect("~/");
+
+            var product = await _context.Products
+                .Include(p => p.Discount)
+                .Include(p => p.Manufacturer)
+                .Include(p => p.Ram)
+                .Include(p => p.Rom)
+                .FirstOrDefaultAsync(m => m.ProductId == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
         }
+
+
+        //public async Task<IActionResult> GetQueryAsync(int? id, int? code)
+        //{
+        //    if (id == null && code == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var product = await _context.Products
+        //        .Include(p => p.Discount)
+        //        .Include(p => p.Manufacturer)
+        //        .Include(p => p.Ram)
+        //        .Include(p => p.Rom)
+        //        .FirstOrDefaultAsync(m => m.ProductId == id);
+        //    if (product == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return View(product);
+        //}
+
+        //[HttpGet("{id}/{code}")]
+        //public async Task<IActionResult> GetQueryAsync(int id, string code)
+        //{
+        //    var user = await _context.Users.FindAsync(id);
+        //    if (user != null)
+        //    {
+        //        if (code == user.Code)
+        //        {
+        //            user.Code = null;
+        //            _context.Users.Update(user);
+        //            await _context.SaveChangesAsync();
+
+        //            //Save Session
+        //            UserSession userSession = new UserSession()
+        //            {
+        //                Id = id,
+        //                Email = user.Email,
+        //            };
+        //            HttpContext.Session.SetString("User", JsonConvert.SerializeObject(userSession));
+
+        //            return Redirect("~/Users/ChangePassword");
+        //        }
+        //    }
+        //    return Redirect("~/");
+        //}
 
         //Đổi mật khẩu
         public IActionResult ChangePassword()
