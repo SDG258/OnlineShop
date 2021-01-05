@@ -9,7 +9,9 @@ namespace OnlineShop.Models
     {
         public User()
         {
+            Comments = new HashSet<Comment>();
             Orders = new HashSet<Order>();
+            Rates = new HashSet<Rate>();
         }
 
         public int UserId { get; set; }
@@ -21,6 +23,8 @@ namespace OnlineShop.Models
         public string Code { get; set; }
         public int? Permission { get; set; }
 
+        public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Rate> Rates { get; set; }
     }
 }

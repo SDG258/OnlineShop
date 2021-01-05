@@ -3,6 +3,18 @@
     ViewData["Title"] = "Trang chủ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .hover-item {
+        background-color: transparent;
+        border-color: white;
+        color: white;
+    }
+
+    .hover-item:hover {
+        background-color: white;
+        color: blue;
+    }   
+</style>
 <div class="filter-area">
     <div class="container">
         <div class="row">
@@ -139,8 +151,15 @@
                     <div class="product__thumbnail">
                         <img src="~/ProductImg/@item.ImgUrl" alt="@item.NameProduct">
                         <div class="prod_btn">
-                            <a href="~/Products/Details/@item.ProductId" class="transparent btn--sm btn--round">Thông tin</a>
-                            <a href="single-product.html" class="transparent btn--sm btn--round">Thêm</a>
+                            <form action="~/Products/AddCart" method="post">
+                                <a href="~/Products/Details/@item.ProductId" class="transparent btn--sm btn--round">Thông tin</a>
+                                <button type="submit" class="transparent btn--sm btn--round hover-item">Thêm</button>
+                                <input hidden name="Price" value="@item.Price" />
+                                <input hidden name="ProductId" value="@item.ProductId" />
+                                <input hidden name="NameProduct" value="@item.NameProduct" />
+                                <input hidden name="DiscountId" value="@item.DiscountId " />
+                                <input hidden name="ImgUrl" value="@item.ImgUrl" />
+                            </form>
                         </div>
                     </div>
 

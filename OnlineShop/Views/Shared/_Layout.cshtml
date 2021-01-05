@@ -1,4 +1,26 @@
-﻿
+﻿@using Microsoft.AspNetCore.Http;
+@using Newtonsoft.Json;
+@{
+    var data = Context.Session.GetString("cart");
+
+    int coutCart = 0;
+    if (data == null)
+    {
+        coutCart = 0;
+    }
+    else
+    {
+        var data2 = Context.Session.GetString("cart");
+        List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(data2);
+        foreach (var item in dataCart)
+        {
+            coutCart += item.Quantity;
+        }
+
+    }
+
+}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,38 +58,14 @@
                         <div class="author-area">
                             <div class="author__notification_area">
                                 <ul>
-
-
                                     <li class="has_dropdown">
                                         <div class="icon_wrap">
-                                            <span class="lnr lnr-cart"></span>
+                                            <a href="~/Products/Cart"><span class="lnr lnr-cart"></span></a>
+                                            <span class="notification_count purch"> @coutCart </span>
                                         </div>
 
-                                        <div class="dropdowns dropdown--cart">
+                                        @*<div class="dropdowns dropdown--cart">
                                             <div class="cart_area">
-                                                <div class="cart_product">
-                                                    <div class="product__info">
-                                                        <div class="thumbn">
-                                                            <img src="~/User/images/capro1.jpg" alt="cart product thumbnail">
-                                                        </div>
-
-                                                        <div class="info">
-                                                            <a class="title" href="single-product.html">Finance and Consulting Business Theme</a>
-                                                            <div class="cat">
-                                                                <a href="#">
-                                                                    <img src="~/User/images/catword.png" alt="">Wordpress
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="product__action">
-                                                        <a href="#">
-                                                            <span class="lnr lnr-trash"></span>
-                                                        </a>
-                                                        <p>$60</p>
-                                                    </div>
-                                                </div>
                                                 <div class="cart_product">
                                                     <div class="product__info">
                                                         <div class="thumbn">
@@ -88,9 +86,10 @@
                                                         <a href="#">
                                                             <span class="lnr lnr-trash"></span>
                                                         </a>
-                                                        <p>$60</p>
+                                                        <p>20$</p>
                                                     </div>
                                                 </div>
+
                                                 <div class="total">
                                                     <p>
                                                         <span>Total :</span>$80
@@ -101,7 +100,7 @@
                                                     <a class="go_checkout" href="checkout.html">Checkout</a>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>*@
                                     </li>
                                 </ul>
                             </div>
@@ -216,7 +215,7 @@
                                             <a href="cart.html">
                                                 <div class="icon_wrap">
                                                     <span class="lnr lnr-cart"></span>
-                                                    <span class="notification_count purch">2</span>
+                                                    <span class="notification_count purch">100</span>
                                                 </div>
                                             </a>
                                         </li>

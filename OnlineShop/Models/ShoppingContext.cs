@@ -24,6 +24,7 @@ namespace OnlineShop.Models
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Ram> Rams { get; set; }
+        public virtual DbSet<Rate> Rates { get; set; }
         public virtual DbSet<Rom> Roms { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<WareHouse> WareHouses { get; set; }
@@ -43,7 +44,12 @@ namespace OnlineShop.Models
 
             modelBuilder.Entity<Comment>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.CommentsId);
+
+                entity.Property(e => e.CommentsId)
+                    .HasMaxLength(10)
+                    .HasColumnName("CommentsID")
+                    .IsFixedLength(true);
 
                 entity.Property(e => e.Cmt).HasMaxLength(250);
 
@@ -52,12 +58,12 @@ namespace OnlineShop.Models
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.Product)
-                    .WithMany()
+                    .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.ProductId)
                     .HasConstraintName("FK_Comment_Product");
 
                 entity.HasOne(d => d.User)
-                    .WithMany()
+                    .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK_Comment_User");
             });
@@ -135,6 +141,11 @@ namespace OnlineShop.Models
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
+                entity.Property(e => e.CommentsId)
+                    .HasMaxLength(10)
+                    .HasColumnName("CommentsID")
+                    .IsFixedLength(true);
+
                 entity.Property(e => e.DiscountId).HasColumnName("DiscountID");
 
                 entity.Property(e => e.ManufacturerId).HasColumnName("ManufacturerID");
@@ -143,7 +154,14 @@ namespace OnlineShop.Models
 
                 entity.Property(e => e.RamId).HasColumnName("RamID");
 
+                entity.Property(e => e.RateId).HasColumnName("RateID");
+
                 entity.Property(e => e.RomId).HasColumnName("RomID");
+
+                entity.HasOne(d => d.CommentsNavigation)
+                    .WithMany(p => p.Products)
+                    .HasForeignKey(d => d.CommentsId)
+                    .HasConstraintName("FK_Product_Comments");
 
                 entity.HasOne(d => d.Discount)
                     .WithMany(p => p.Products)
@@ -174,6 +192,29 @@ namespace OnlineShop.Models
                 entity.ToTable("Ram");
 
                 entity.Property(e => e.RamId).HasColumnName("RamID");
+            });
+
+            modelBuilder.Entity<Rate>(entity =>
+            {
+                entity.ToTable("Rate");
+
+                entity.Property(e => e.RateId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("RateID");
+
+                entity.Property(e => e.ProductId).HasColumnName("ProductID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.Rates)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK_Rate_Product");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Rates)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_Rate_User");
             });
 
             modelBuilder.Entity<Rom>(entity =>

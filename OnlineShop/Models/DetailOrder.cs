@@ -9,9 +9,9 @@ namespace OnlineShop.Models
     {
         public int OrderDetailId { get; set; }
         public int? OrderId { get; set; }
-        public int? ProductId { get; set; }
+        public int ProductId { get; set; }
         public DateTime? DataCreate { get; set; }
-        public double? Price { get; set; }
+        public int? Price { get; set; }
         public int? Amount { get; set; }
 
         public virtual Order Order { get; set; }

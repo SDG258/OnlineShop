@@ -1,0 +1,109 @@
+﻿@model IEnumerable<OnlineShop.Models.Cart>
+@{ ViewData["Title"] = "Giỏ hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="cart_area section--padding2 bgcolor">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="product_archive added_to__cart" style="text-align:center">
+                    @if (Model != null)
+                    {
+                        <div class="title_area">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <h4>Product Details</h4>
+                                </div>
+                                <div class="col-md-3">
+                                    <h4 class="add_info">Category</h4>
+                                </div>
+                                <div class="col-md-2">
+                                    <h4>Price</h4>
+                                </div>
+                                <div class="col-md-2">
+                                    <h4>Remove</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            @foreach (var item in Model)
+                             {
+                                <div class="col-md-12">
+                                    <div class="single_product clearfix">
+                                        <div class="col-lg-5 col-md-7 v_middle">
+                                            <div class="product__description">
+                                                <img style=" width: 100px;" src="~/ProductImg/@item.product.ImgUrl" alt="@item.product.NameProduct">
+                                                <div class="short_desc">
+                                                    <a href="~/Products/Details/@item.product.ProductId">
+                                                        <h4>@item.product.NameProduct</h4>
+                                                    </a>
+                                                    @*<p>Ram: @item.product.Ram.Memory/Rom: @item.product.Rom.Space</p>*@
+                                                    <p>Cấu hình</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 col-md-2 v_middle">
+                                            <div class="product__additional_info">
+                                                <ul>
+                                                    <li>
+                                                        <img class="auth-img" src="~/User/images/auth2.jpg" alt="author image"> Hãng
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-3 v_middle">
+                                            <div class="product__price_download">
+                                                <div class="item_price v_middle">
+                                                    <span>@string.Format("{0:#,##0}", item.product.Price) VNĐ</span>
+                                                </div>
+                                                <div class="item_action v_middle">
+                                                    <form action="~/Products/deleteCart" method="post">
+                                                        <input hidden name="ProductId" value="@item.product.ProductId" />
+                                                        <button style="border: none; background-color: transparent" ; type="submit">
+                                                            <div class="remove_from_cart">
+                                                                <span class="lnr lnr-trash"></span>
+                                                            </div>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                             }
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 offset-md-6">
+                                <div class="cart_calculation">
+                                    <div class="cart--subtotal">
+                                        <p>
+                                            <span>Tổng số tiền</span>10 VNĐ
+                                        </p>
+                                    </div>
+                                    <div class="cart--total">
+                                        <p>
+                                            <span>Tổng số tiền phải trả</span>$120
+                                        </p>
+                                    </div>
+
+                                    <a href="checkout.html" class="btn btn--round btn--md checkout_link">Proceed To Checkout</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                    else
+                    {
+                        <h2><strong>Hiện tại không có sản phẩm nào trong giỏ hàng.</strong></h2>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

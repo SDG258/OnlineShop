@@ -51,6 +51,14 @@ namespace OnlineShop.Controllers
                 bool verified = BCrypt.Net.BCrypt.Verify(user.Password, userForDb.Password);
                 if (verified)
                 {
+                    //Save Session
+                    UserSession userSession = new UserSession()
+                    {
+                        Id = userForDb.UserId,
+                        Email = user.Email,
+                    };
+                    HttpContext.Session.SetString("User", JsonConvert.SerializeObject(userSession));
+
                     return Redirect("~/Home/");
                 }
                 else if (verified)

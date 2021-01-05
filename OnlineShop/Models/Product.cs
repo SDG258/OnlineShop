@@ -9,6 +9,8 @@ namespace OnlineShop.Models
     {
         public Product()
         {
+            Comments = new HashSet<Comment>();
+            Rates = new HashSet<Rate>();
             WareHouses = new HashSet<WareHouse>();
         }
 
@@ -21,12 +23,17 @@ namespace OnlineShop.Models
         public int RamId { get; set; }
         public string Note { get; set; }
         public int? Status { get; set; }
+        public string CommentsId { get; set; }
+        public int? RateId { get; set; }
         public int ManufacturerId { get; set; }
 
+        public virtual Comment CommentsNavigation { get; set; }
         public virtual Discount Discount { get; set; }
         public virtual Manufacturer Manufacturer { get; set; }
         public virtual Ram Ram { get; set; }
         public virtual Rom Rom { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Rate> Rates { get; set; }
         public virtual ICollection<WareHouse> WareHouses { get; set; }
     }
 }
