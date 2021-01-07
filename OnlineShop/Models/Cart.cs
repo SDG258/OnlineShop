@@ -9,5 +9,6 @@ namespace OnlineShop.Models
     {
         public Product product { get; set; }
         public int Quantity { get; set; }
+        public float Sum { get; set; }
     }
 }

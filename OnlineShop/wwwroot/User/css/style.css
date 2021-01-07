@@ -11692,10 +11692,6 @@ span.counter {
   margin-right: 36px;
 }
 
-.cart_calculation .cart--subtotal p span:after, .cart_calculation .cart--total p span:after {
-  content: ':';
-}
-
 .cart_calculation .cart--total p {
   font-weight: 500;
 }

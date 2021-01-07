@@ -163,15 +163,34 @@ namespace OnlineShop.Controllers
 
                 for (int i = 0; i < dataCart.Count; i++)
                 {
-                    if (dataCart[i].product.ProductId == product.ProductId)
+                    if(dataCart[i].Quantity > 1)
                     {
-                        dataCart.RemoveAt(i);
+                        dataCart[i].Quantity -= 1;
+                    }
+                    else
+                    {
+                        if (dataCart[i].product.ProductId == product.ProductId)
+                        {
+                            dataCart.RemoveAt(i);
+                        }
                     }
                 }
                 HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart));
                 return RedirectToAction(nameof(Cart));
             }
             return Redirect("~/Home/");
+        }
+        [HttpPost]
+        public async Task<IActionResult> CheckDiscounts(Discount discount)
+        {
+            var discounts = await _context.Discounts.FirstOrDefaultAsync(x => x.DiscountCode == discount.DiscountCode);
+            if( discounts!= null)
+            {
+                if(discounts.DiscountCode == discount.DiscountCode)
+                {
+                }
+            }
+            return View();
         }
     }
 }

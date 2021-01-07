@@ -139,7 +139,7 @@ namespace OnlineShop.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgotPassword(User user)
         {
-            var userForDb = _context.Users.FirstOrDefault(x => x.Email == user.Email);
+            var userForDb = await _context.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
 
             if (user.Email == null)
             {
@@ -168,7 +168,7 @@ namespace OnlineShop.Controllers
 
                 message.Body = new TextPart("html")
                 {
-                    Text = "<strong>From ASP.NET Shopping</strong>" + "<br>" + "<strong>" + myHostUrl + "?UserId=" + user.UserId + "&Code=" + randomNumberString
+                    Text = "<strong>From ASP.NET Shopping</strong>" + "<br>" + "<strong>" + myHostUrl + "Users?UserId=" + user.UserId + "&Code=" + randomNumberString
                 };
                 using (var client = new SmtpClient())
                 {
