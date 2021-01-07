@@ -81,20 +81,20 @@
                         <div class="row">
                             <div class="col-md-6 offset-md-6">
                                 <div class="cart_calculation">
-                                    <div class="cart--subtotal">
-                                        <p id="Price"><span>Tổng số tiền</span>5 VNĐ</p>
-                                    </div>
-                                    <div class="form-group">
-                                        <form action="~/Products/CheckDiscounts" method="post">
+                                    <form action="~/Products/CheckDiscounts" method="post">
+                                        <div class="cart--subtotal">
+                                            <p id="Price"><span>Tổng số tiền: </span>0 VNĐ</p>
+                                            <input hidden name="Sum" value="0" />
+
+                                        </div>
+                                        <div class="form-group">
                                             <label for="card_number">Mã giảm giá</label>
                                             <input name="DiscountCode" id="card_number" type="text" class="text_field" placeholder="Vui lòng nhập mã giảm giá...">
                                             <button class="btn btn--round btn--md checkout_link">Kiểm tra mã giảm giá</button>
-                                        </form>
-                                    </div>
+                                        </div>
+                                    </form>
                                     <div class="cart--total">
-                                        <p>
-                                            <span>Tổng số tiền phải trả</span>$120
-                                        </p>
+                                        <p id="Sum"><span>Tổng số tiền: </span> 0 VNĐ</p>
                                     </div>
                                     <button class="btn btn--round btn--md checkout_link">Thanh toán</button>
                                 </div>
@@ -114,7 +114,7 @@
 <script>
     @{
         int tmp = 0;
-        if(Model != null)
+        if (Model != null)
         {
             foreach (var item in Model)
             {
@@ -122,5 +122,15 @@
             }
         }
     }
-    document.getElementById('Price').innerHTML = "<p><span>Tổng số tiền</span>@tmp VNĐ</p>"
+    document.getElementById('Price').innerHTML = "<p name='Total'><span>Tổng số tiền</span>@tmp VNĐ</p><input hidden name='Sum' value=@tmp />"
+    document.getElementById('Sum').innerHTML = "<p name='Sum'><span>Tổng số tiền</span>@{
+        if(TempData["Total"] != null)
+        {
+            @TempData["Total"];
+        }
+        else
+        {
+            @tmp;
+        }
+    } VNĐ</p>"
 </script>

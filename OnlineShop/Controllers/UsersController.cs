@@ -124,6 +124,10 @@ namespace OnlineShop.Controllers
                 string passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
                 Newuser.Password = passwordHash;
+                Newuser.Address = user.Address;
+                Newuser.Ward = user.Ward;
+                Newuser.District = user.District;
+                Newuser.City = user.City;
                 _context.Users.Add(Newuser);
                 await _context.SaveChangesAsync();
 

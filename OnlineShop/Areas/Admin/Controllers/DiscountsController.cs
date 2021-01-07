@@ -40,8 +40,10 @@ namespace OnlineShop.Areas.Admin.Controllers
             NewDiscount.DiscountCode = discount.DiscountCode;
             NewDiscount.DiscountPercent = discount.DiscountPercent;
             NewDiscount.AmountOf = discount.AmountOf;
+            NewDiscount.Used = 0;
             NewDiscount.StartDate = discount.StartDate;
             NewDiscount.EndDate = discount.EndDate;
+            NewDiscount.Note = discount.Note;
 
             _context.Discounts.Update(NewDiscount);
             await _context.SaveChangesAsync();

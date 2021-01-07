@@ -181,16 +181,26 @@ namespace OnlineShop.Controllers
             return Redirect("~/Home/");
         }
         [HttpPost]
-        public async Task<IActionResult> CheckDiscounts(Discount discount)
+        public async Task<IActionResult> CheckDiscounts(Discount discount, int Sum)
         {
             var discounts = await _context.Discounts.FirstOrDefaultAsync(x => x.DiscountCode == discount.DiscountCode);
-            if( discounts!= null)
+            int Total = 0;
+            if ( discounts!= null)
             {
-                if(discounts.DiscountCode == discount.DiscountCode)
+                DateTime now = DateTime.Now;
+                if (discounts.DiscountCode == discount.DiscountCode && now >= discounts.StartDate && now <= discounts.EndDate && discounts.Used < discounts.AmountOf)
                 {
+                    Total = Sum - (int)(Sum * (discounts.DiscountPercent / 100));
+                    //var discountForDB = await _context.Discounts.FirstOrDefaultAsync(x => x.DiscountCode == discounts.DiscountCode);
+                    //discountForDB.Used += 1;
+                    //_context.Discounts.Update(discountForDB);
+                    //await _context.SaveChangesAsync();
+                    TempData["Total"] = Total;
+
+                    return RedirectToAction(nameof(Cart));
                 }
             }
-            return View();
+            return Redirect("~/Products/Cart");
         }
     }
 }

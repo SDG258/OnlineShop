@@ -96,7 +96,7 @@ namespace OnlineShop.Models
                 entity.Property(e => e.DiscountId).HasColumnName("DiscountID");
 
                 entity.Property(e => e.DiscountCode)
-                    .HasMaxLength(8)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EndDate).HasColumnType("date");
@@ -230,7 +230,13 @@ namespace OnlineShop.Models
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
+                entity.Property(e => e.Address).HasMaxLength(50);
+
+                entity.Property(e => e.City).HasMaxLength(50);
+
                 entity.Property(e => e.Code).HasMaxLength(50);
+
+                entity.Property(e => e.District).HasMaxLength(50);
 
                 entity.Property(e => e.Email).HasMaxLength(50);
 
@@ -243,6 +249,8 @@ namespace OnlineShop.Models
                 entity.Property(e => e.Phone)
                     .HasMaxLength(15)
                     .IsFixedLength(true);
+
+                entity.Property(e => e.Ward).HasMaxLength(50);
             });
 
             modelBuilder.Entity<WareHouse>(entity =>

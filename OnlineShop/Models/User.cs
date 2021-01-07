@@ -22,6 +22,10 @@ namespace OnlineShop.Models
         public string LastName { get; set; }
         public string Code { get; set; }
         public int? Permission { get; set; }
+        public string Address { get; set; }
+        public string Ward { get; set; }
+        public string District { get; set; }
+        public string City { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
