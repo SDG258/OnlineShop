@@ -28,23 +28,24 @@ namespace OnlineShop.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult>Login(User user)
+        public async Task<IActionResult> Login(User user)
         {
             if (user.Email == null)
             {
                 ModelState.AddModelError("Email", "Vui lòng điền thông tin");
-                return RedirectToAction(nameof(Index));
+                return View();
 
             }
             if (user.Password == null)
             {
                 ModelState.AddModelError("Password", "Vui lòng điền thông tin");
-                return RedirectToAction(nameof(Index));
+                return View();
             }
             var userForDb = _context.Users.SingleOrDefault(x => x.Email == user.Email);
             if (userForDb == null)
             {
                 ModelState.AddModelError("Email", "Không tìm thấy tài khoản trong hệ thống vui lòng đăng ký");
+                return View();
             }
             else if (userForDb != null)
             {
@@ -68,6 +69,7 @@ namespace OnlineShop.Controllers
                 else
                 {
                     ModelState.AddModelError("Password", "Vui lòng kiểm tra lại mật khẩu");
+                    return View();
                 }
             }
             return RedirectToAction(nameof(Index));
@@ -85,32 +87,67 @@ namespace OnlineShop.Controllers
             if (user.FristName == null)
             {
                 ModelState.AddModelError("FristName", "Vui lòng điền họ");
+                return View();
             }
             else if (user.LastName == null)
             {
                 ModelState.AddModelError("LastName", "Vui lòng điền tên");
-            }
-
-            else if (user.Email == null)
-            {
-                ModelState.AddModelError("Email", "Vui lòng điền Mail");
-
-            }
-            else if (userEmail != null)
-            {
-                ModelState.AddModelError("Email", "Tài khoản đã tồn tại vui lòng đăng nhập");
+                return View();
             }
             else if (user.Phone == null)
             {
                 ModelState.AddModelError("Phone", "Vui lòng điền số điện thoại");
+                return View();
+            }
+            else if (user.Email == null)
+            {
+                ModelState.AddModelError("Email", "Vui lòng điền email");
+                return View();
+            }
+            else if (userEmail != null)
+            {
+                ModelState.AddModelError("Email", "Tài khoản đã tồn tại vui lòng đăng nhập");
+                return View();
+            }
+            else if (user.Phone == null)
+            {
+                ModelState.AddModelError("Phone", "Vui lòng điền số điện thoại");
+                return View();
             }
             else if (user.Password == null)
             {
                 ModelState.AddModelError("Password", "Vui lòng điền mật khẩu");
+                return View();
+            }
+            else if (ConfirmPassword == null)
+            {
+                ModelState.AddModelError("Password", "Vui lòng điền xác nhận mật khẩu");
+                return View();
             }
             else if (user.Password != ConfirmPassword)
             {
                 ModelState.AddModelError("Password", "Vui lòng kiểm tra lại mật khẩu và xác nhận mật khẩu");
+                return View();
+            }
+            else if (user.Address != null)
+            {
+                ModelState.AddModelError("Address", "Vui lòng điền số nhà, tên đường");
+                return View();
+            }
+            else if (user.Ward != null)
+            {
+                ModelState.AddModelError("Address", "Vui lòng điền xã/phường");
+                return View();
+            }
+            else if (user.District != null)
+            {
+                ModelState.AddModelError("Address", "Vui lòng điền quận/huyện");
+                return View();
+            }
+            else if (user.City != null)
+            {
+                ModelState.AddModelError("Address", "Vui lòng điền tỉnh/thành Phố");
+                return View();
             }
             else
             {
@@ -279,5 +316,6 @@ namespace OnlineShop.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
     }
 }

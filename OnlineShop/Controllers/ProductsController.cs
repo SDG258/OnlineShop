@@ -202,5 +202,48 @@ namespace OnlineShop.Controllers
             }
             return Redirect("~/Products/Cart");
         }
+        public async Task<IActionResult> CheckOut()
+        {
+            var User = HttpContext.Session.GetString("User");
+            if (User != null)
+            {
+                var userSession = JsonConvert.DeserializeObject<UserSession>(User);
+                var userForDB = await _context.Users.FirstOrDefaultAsync(m => m.UserId == userSession.Id);
+                if (userForDB != null)
+                {
+                    return View(userForDB);
+
+                }
+            }
+            return Redirect("~/Users/Login");
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditAddress(User user)
+        {
+
+            var User = HttpContext.Session.GetString("User");
+            if (User != null)
+            {
+                var userSession = JsonConvert.DeserializeObject<UserSession>(User);
+                var userForDB = await _context.Users.FindAsync(userSession.Id);
+                if (userForDB != null)
+                {
+                    userForDB.Address = user.Address;
+                    userForDB.Ward = user.Ward;
+                    userForDB.District = user.District;
+                    userForDB.City = user.City;
+
+                    _context.Users.Update(userForDB);
+                    await _context.SaveChangesAsync();
+                }
+                return RedirectToAction(nameof(CheckOut));
+            }
+            return Redirect("~/Users/Login");
+        }
+        public async Task<IActionResult> Confirm(User user, Discount discount, int Sum)
+        {
+            return View();
+        }
     }
 }

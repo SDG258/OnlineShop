@@ -20,29 +20,30 @@ namespace OnlineShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/Login
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Login()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> HandleLogin(User user)
+        public async Task<IActionResult> Login(User user)
         {
             if (user.Email == null)
             {
                 ModelState.AddModelError("Email", "Vui lòng điền thông tin");
-                return RedirectToAction(nameof(Index));
+                return View();
 
             }
             if (user.Password == null)
             {
                 ModelState.AddModelError("Password", "Vui lòng điền thông tin");
-                return RedirectToAction(nameof(Index));
+                return View();
             }
-            var userForDb = _context.Users.FirstOrDefault(x => x.Email == user.Email);
+            var userForDb = _context.Users.SingleOrDefault(x => x.Email == user.Email);
             if (userForDb == null)
             {
                 ModelState.AddModelError("Email", "Không tìm thấy tài khoản trong hệ thống vui lòng đăng ký");
+                return View();
             }
             else if (userForDb != null)
             {
@@ -54,6 +55,10 @@ namespace OnlineShop.Areas.Admin.Controllers
                 else if (verified)
                 {
                     return Redirect("~/");
+                }
+                else if (verified && userForDb.Permission != 1)
+                {
+                    ModelState.AddModelError("Email", "Bạn không có quyền truy cập");
                 }
                 else
                 {

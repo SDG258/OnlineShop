@@ -93,10 +93,12 @@
                                             <button class="btn btn--round btn--md checkout_link">Kiểm tra mã giảm giá</button>
                                         </div>
                                     </form>
-                                    <div class="cart--total">
-                                        <p id="Sum"><span>Tổng số tiền: </span> 0 VNĐ</p>
-                                    </div>
-                                    <button class="btn btn--round btn--md checkout_link">Thanh toán</button>
+                                    <form action="~/Products/CheckOut" method="post">
+                                        <div class="cart--total">
+                                            <p id="Sum"><span>Tổng số tiền: </span> 0 VNĐ</p>
+                                        </div>
+                                        <button class="btn btn--round btn--md checkout_link">Thanh toán</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +125,7 @@
         }
     }
     document.getElementById('Price').innerHTML = "<p name='Total'><span>Tổng số tiền</span>@tmp VNĐ</p><input hidden name='Sum' value=@tmp />"
-    document.getElementById('Sum').innerHTML = "<p name='Sum'><span>Tổng số tiền</span>@{
+    document.getElementById('Sum').innerHTML = "<p name='Sum'><span>Số tiền phải trả</span>@{
         if(TempData["Total"] != null)
         {
             @TempData["Total"];

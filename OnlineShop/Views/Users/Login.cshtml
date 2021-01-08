@@ -1,4 +1,5 @@
-﻿@{
+﻿@model OnlineShop.Models.User
+@{
     ViewData["Title"] = "Trang đăng nhập";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -9,33 +10,28 @@
                 <form action="~/Users/Login" method="post">
                     <div class="cardify login">
                         <div class="login--header">
-                            <h3>Welcome Back</h3>
-                            <p>You can sign in with your username</p>
+                            <h3>Xin chào</h3>
+                            <p>Bạn có thể đăng nhập bằng tên người dùng của mình</p>
                         </div>
-                        <!-- end .login_header -->
 
                         <div class="login--form">
                             <div class="form-group">
                                 <label for="user_name">Email</label>
+                                <span asp-validation-for="Email" class="text-danger"></span>
                                 <input id="user_name" type="text" class="text_field" name="Email" placeholder="Email">
                             </div>
 
                             <div class="form-group">
-                                <label for="pass">Password</label>
-                                <input id="pass" type="text" class="text_field" name="Password" placeholder="Mật khẩu của bạn">
+                                <label for="pass">Mật khẩu</label>
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                                <input id="pass" type="password" class="text_field" name="Password" placeholder="Mật khẩu của bạn">
                             </div>
 
-                            <button class="btn btn--md btn--round" type="submit">Login Now</button>
+                            <button class="btn btn--md btn--round" type="submit">Đăng nhập</button>
 
                             <div class="login_assist">
-                                <p class="recover">
-                                    Lost your
-                                    <a href="pass-recovery.html">username</a> or
-                                    <a href="pass-recovery.html">password</a>?
-                                </p>
-                                <p class="signup">
-                                    Don't have an
-                                    <a href="~/Users/Register">account</a>?
+                                <p class="recover">Bạn quên <a href="~/Users/ForgotPassword">mật khẩu</a>?
+                                </p> Không có tài khoản<a href="~/Users/Register"> tạo tài khoản</a>?
                                 </p>
                             </div>
                         </div>

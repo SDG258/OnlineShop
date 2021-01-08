@@ -29,7 +29,7 @@
                 <div class="login100-pic js-tilt" data-tilt>
                     <img src="~/Admin/images/img-01.png" alt="IMG">
                 </div>
-                <form action="@Url.Action("HandleLogin", "Login", new { area = "Admin" })" method="post" class="login100-form validate-form">
+                <form action="@Url.Action("Login", "Login", new { area = "Admin" })" method="post" class="login100-form validate-form">
                     <span class="login100-form-title">Admin Login</span>
                     <div class="wrap-input100 validate-input" data-validate="Valid email is required: ex@abc.xyz">
                         <input class="input100" type="text" name="email" placeholder="Email">
