@@ -198,9 +198,9 @@ namespace OnlineShop.Controllers
 
                 //Send Mail
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("Test project", "aps.netcore.dev@gmail.com"));
+                message.From.Add(new MailboxAddress("users project", "aps.netcore.dev@gmail.com"));
                 message.To.Add(new MailboxAddress("ASP.NET Shopping", userForDb.Email));
-                message.Subject = "Test send mail";
+                message.Subject = "users send mail";
 
                 userForDb.Code = randomNumberString;
                 _context.Users.Update(userForDb);
@@ -322,7 +322,9 @@ namespace OnlineShop.Controllers
             var User = HttpContext.Session.GetString("User");
             var userSession = JsonConvert.DeserializeObject<UserSession>(User);
             var userForDB = await _context.Users.FirstOrDefaultAsync(m => m.UserId == userSession.Id);
-            return View(userForDB);
+            User users = userForDB;
+            users.Phone = userForDB.Phone.Trim();
+            return View(users);
         }
         [HttpPost]
         public async Task<IActionResult> PersonalInformationUpdate(User users)
@@ -336,7 +338,7 @@ namespace OnlineShop.Controllers
                 {
                     UserForDB.FristName = users.FristName;
                     UserForDB.LastName = users.LastName;
-                    UserForDB.Phone = users.Phone;
+                    UserForDB.Phone = users.Phone.Trim();
                     UserForDB.Address = users.Address;
                     UserForDB.Ward = users.Ward;
                     UserForDB.District = users.District;
