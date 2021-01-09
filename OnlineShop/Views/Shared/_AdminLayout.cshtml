@@ -1,4 +1,5 @@
-﻿
+﻿@using Microsoft.AspNetCore.Http;
+@using Newtonsoft.Json;
 <!DOCTYPE html>
 <html lang="en">
 
@@ -37,73 +38,83 @@
                             <div class="author-author__info inline has_dropdown">
                                 <div class="author__avatar">
                                     <img src="~/User/images/usr_avatar.png" alt="user avatar">
+                                </div>
+                                @{
+                                    var User = Context.Session.GetString("User");
 
-                                </div>
-                                <div class="autor__info">
-                                    <p class="name">
-                                        Hello Admin
-                                    </p>
-                                </div>
-
-                                <div class="dropdowns dropdown--author">
-                                    <ul>
-                                        <li>
-                                            <a href="author.html">
-                                                <span class="lnr lnr-user"></span>Profile
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="dashboard.html">
-                                                <span class="lnr lnr-home"></span> Dashboard
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="dashboard-setting.html">
-                                                <span class="lnr lnr-cog"></span> Setting
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="cart.html">
-                                                <span class="lnr lnr-cart"></span>Purchases
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="favourites.html">
-                                                <span class="lnr lnr-heart"></span> Favourite
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="dashboard-add-credit.html">
-                                                <span class="lnr lnr-dice"></span>Add Credits
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="dashboard-statement.html">
-                                                <span class="lnr lnr-chart-bars"></span>Sale Statement
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="dashboard-upload.html">
-                                                <span class="lnr lnr-upload"></span>Upload Item
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="dashboard-manage-item.html">
-                                                <span class="lnr lnr-book"></span>Manage Item
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="dashboard-withdrawal.html">
-                                                <span class="lnr lnr-briefcase"></span>Withdrawals
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <span class="lnr lnr-exit"></span>Logout
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                    if (User == null)
+                                    {
+                                        <div class="autor__info">
+                                            <p class="name"><a href="~/Users/Login">Đăng nhập</a><a href="~/Users/Register">/Đăng ký</a></p>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        UserSession UserForDB = JsonConvert.DeserializeObject<UserSession>(User);
+                                        <div class="autor__info">
+                                            <p class="name">Xin chào, @UserForDB.Name</p>
+                                        </div>
+                                        <div class="dropdowns dropdown--author">
+                                            <ul>
+                                                <li>
+                                                    <a href="author.html">
+                                                        <span class="lnr lnr-user"></span>Profile
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="dashboard.html">
+                                                        <span class="lnr lnr-home"></span> Dashboard
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="dashboard-setting.html">
+                                                        <span class="lnr lnr-cog"></span> Setting
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="cart.html">
+                                                        <span class="lnr lnr-cart"></span>Purchases
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="favourites.html">
+                                                        <span class="lnr lnr-heart"></span> Favourite
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="dashboard-add-credit.html">
+                                                        <span class="lnr lnr-dice"></span>Add Credits
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="dashboard-statement.html">
+                                                        <span class="lnr lnr-chart-bars"></span>Sale Statement
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="dashboard-upload.html">
+                                                        <span class="lnr lnr-upload"></span>Upload Item
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="dashboard-manage-item.html">
+                                                        <span class="lnr lnr-book"></span>Manage Item
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="dashboard-withdrawal.html">
+                                                        <span class="lnr lnr-briefcase"></span>Withdrawals
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <span class="lnr lnr-exit"></span>Logout
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    }
+                                }
                             </div>
                         </div>
                         <div class="mobile_content ">

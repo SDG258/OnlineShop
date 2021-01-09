@@ -57,6 +57,7 @@ namespace OnlineShop.Controllers
                     {
                         Id = userForDb.UserId,
                         Email = user.Email,
+                        Name = userForDb.FristName + " " + userForDb.LastName,
                     };
                     HttpContext.Session.SetString("User", JsonConvert.SerializeObject(userSession));
 
@@ -316,6 +317,41 @@ namespace OnlineShop.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> Setting()
+        {
+            var User = HttpContext.Session.GetString("User");
+            var userSession = JsonConvert.DeserializeObject<UserSession>(User);
+            var userForDB = await _context.Users.FirstOrDefaultAsync(m => m.UserId == userSession.Id);
+            return View(userForDB);
+        }
+        [HttpPost]
+        public async Task<IActionResult> PersonalInformationUpdate(User users)
+        {
+            var User = HttpContext.Session.GetString("User");
+            var userSession = JsonConvert.DeserializeObject<UserSession>(User);
+            var UserForDB = await _context.Users.FindAsync(userSession.Id);
+            if (UserForDB != null)
+            {
+                if (users != null)
+                {
+                    UserForDB.FristName = users.FristName;
+                    UserForDB.LastName = users.LastName;
+                    UserForDB.Phone = users.Phone;
+                    UserForDB.Address = users.Address;
+                    UserForDB.Ward = users.Ward;
+                    UserForDB.District = users.District;
+                    UserForDB.City = users.City;
 
+                    _context.Users.Update(UserForDB);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction(nameof(Setting));
+        }
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("User");
+            return RedirectToAction(nameof(Login));
+        }
     }
 }

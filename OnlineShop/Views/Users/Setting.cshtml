@@ -1,0 +1,182 @@
+﻿@using Microsoft.AspNetCore.Http;
+@using Newtonsoft.Json;
+@model OnlineShop.Models.User
+
+<section class="author-profile-area">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-12">
+                <aside class="sidebar sidebar_author">
+                    <div class="author-card sidebar-card">
+                        <div class="author-infos">
+                            <div class="author_avatar">
+                                <img src="~/User/images/author-avatar.jpg" alt="Presenting the broken author avatar :D">
+                            </div>
+
+                            <div class="author">
+                                @{
+                                    var User = Context.Session.GetString("User");
+                                    if (User != null)
+                                    {
+                                        UserSession UserForDB = JsonConvert.DeserializeObject<UserSession>(User);
+
+                                        <h4>@UserForDB.Email</h4>
+                                        <p>@UserForDB.Name</p>
+
+                                    }
+                                }
+                            </div>
+
+                            <div class="author-badges">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <span data-toggle="tooltip" data-placement="bottom" title="Diamnond Author">
+                                            <img src="~/User/images/svg/author_rank_diamond.svg" alt="" class="svg">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span data-toggle="tooltip" data-placement="bottom" title="Has sold more than $10k">
+                                            <img src="~/User/images/svg/author_level_3.svg" alt="" class="svg">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span data-toggle="tooltip" data-placement="bottom" title="Referred 10+ members">
+                                            <img src="~/User/images/svg/affiliate_level_1.svg" alt="" class="svg">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span data-toggle="tooltip" data-placement="bottom" title="Has Collected 2+ Items">
+                                            <img src="~/User/images/svg/collection_level_1.svg" alt="" class="svg">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span data-toggle="tooltip" data-placement="bottom" title="Exclusive Author">
+                                            <img src="~/User/images/svg/exclusive_author.svg" alt="" class="svg">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span data-toggle="tooltip" data-placement="bottom" title="Weekly Featured Author">
+                                            <img src="~/User/images/svg/featured_author.svg" alt="" class="svg">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span data-toggle="tooltip" data-placement="bottom" title="Member for 2 Year">
+                                            <img src="~/User/images/svg/members_years.svg" alt="" class="svg">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span data-toggle="tooltip" data-placement="bottom" title="The seller is recommended by authority">
+                                            <img src="~/User/images/svg/recommended.svg" alt="" class="svg">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span data-toggle="tooltip" data-placement="bottom" title="Won a contest">
+                                            <img src="~/User/images/svg/contest_winner.svg" alt="" class="svg">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span data-toggle="tooltip" data-placement="bottom" title="Helped to resolve copyright issues">
+                                            <img src="~/User/images/svg/copyright.svg" alt="" class="svg">
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="sidebar-card author-menu">
+                        <ul>
+                            <li>
+                                <a href="#" class="active">Hồ sơ</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </aside>
+            </div>
+
+            <div class="col-lg-8 col-md-12">
+                <div class="row">
+                    <div class="information_module">
+                        <div class="toggle_title">
+                            <h4>Thông tin cá nhân</h4>
+                        </div>
+
+                        <div class="information__set">
+                            <form action="~/Users/PersonalInformationUpdate" method="post">
+                                <div class="information_wrapper form--fields">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="first_name">
+                                                    Họ
+                                                </label>
+                                                <input type="text" id="first_name" class="text_field" name="FristName" value="@Html.DisplayFor(model => model.FristName)">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="last_name">
+                                                    Tên
+                                                </label>
+                                                <input type="text" id="last_name" class="text_field" name="LastName" value="@Html.DisplayFor(model => model.LastName)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end /.row -->
+
+                                    <div class="form-group">
+                                        <label for="email">
+                                            Email
+                                        </label>
+                                        <input disabled type="text" id="email" class="text_field" value="@Html.DisplayFor(model => model.Email)">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="email1">
+                                            Số điện thoại
+                                        </label>
+                                        <input type="number" id="email1" class="text_field" name="Phone" value="@Html.DisplayFor(model => model.Phone)">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="address1">Số nhà, tên đường</label>
+                                        <input type="text" id="address1" class="text_field" name="Address" value="@Html.DisplayFor(model => model.Address)">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="address2">Xã/Phường</label>
+                                        <input type="text" id="address2" class="text_field" name="Ward" value="@Html.DisplayFor(model => model.Ward)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address2">Quận/Huyện</label>
+                                        <input type="text" id="address2" class="text_field" name="District" value="@Html.DisplayFor(model => model.District)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address2">Tỉnh/Thành Phố</label>
+                                        <input type="text" id="address2" class="text_field" name="City" value="@Html.DisplayFor(model => model.City)">
+                                    </div>
+
+                                    <button style="float: right;" type="submit" class="btn btn--round btn--default">Cập nhật</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section class="call-to-action bgimage">
+    <div class="bg_image_holder">
+        <img src="~/User/images/calltobg.jpg" alt="">
+    </div>
+</section>

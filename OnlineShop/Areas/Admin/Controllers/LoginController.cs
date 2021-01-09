@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using OnlineShop.Models;
 
 namespace OnlineShop.Areas.Admin.Controllers
@@ -20,7 +22,7 @@ namespace OnlineShop.Areas.Admin.Controllers
         }
 
         // GET: Admin/Login
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> Index()
         {
             return View();
         }
@@ -50,6 +52,14 @@ namespace OnlineShop.Areas.Admin.Controllers
                 bool verified = BCrypt.Net.BCrypt.Verify(user.Password, userForDb.Password);
                 if (verified && userForDb.Permission == 1)
                 {
+                    //Save Session
+                    UserSession userSession = new UserSession()
+                    {
+                        Id = userForDb.UserId,
+                        Email = user.Email,
+                        Name = userForDb.FristName + " " + userForDb.LastName,
+                    };
+                    HttpContext.Session.SetString("User", JsonConvert.SerializeObject(userSession));
                     return Redirect("~/Admin/Dashboard");
                 }
                 else if (verified)
