@@ -8,106 +8,112 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="product_archive added_to__cart" style="text-align:center">
-                    @if (Model != null)
-                    {
-                        <div class="title_area">
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <h4>Product Details</h4>
-                                </div>
-                                <div class="col-md-3">
-                                    <h4 class="add_info">Số lượng</h4>
-                                </div>
-                                <div class="col-md-2">
-                                    <h4>Price</h4>
-                                </div>
-                                <div class="col-md-2">
-                                    <h4>Remove</h4>
+                    <h2><strong id="QuantityIsNull"></strong></h2>
+
+                    <div id="delete">
+                        @if (Model != null)
+                        {
+                            <div class="title_area">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <h4>Product Details</h4>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <h4 class="add_info">Số lượng</h4>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <h4>Price</h4>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <h4>Remove</h4>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            @foreach (var item in Model)
-                            {
-                                <div class="col-md-12">
-                                    <div class="single_product clearfix">
-                                        <div class="col-lg-5 col-md-7 v_middle">
-                                            <div class="product__description">
-                                                <img style=" width: 100px;" src="~/ProductImg/@item.product.ImgUrl" alt="@item.product.NameProduct">
-                                                <div class="short_desc">
-                                                    <a href="~/Products/Details/@item.product.ProductId">
-                                                        <h4>@item.product.NameProduct</h4>
-                                                    </a>
-                                                    @*<p>Ram: @item.product.Ram.Memory/Rom: @item.product.Rom.Space</p>*@
-                                                    <p>Cấu hình</p>
+                            <div class="row">
+                                @foreach (var item in Model)
+                                {
+                                    <div class="col-md-12">
+                                        <div class="single_product clearfix">
+                                            <div class="col-lg-5 col-md-7 v_middle">
+                                                <div class="product__description">
+                                                    <img style=" width: 100px;" src="~/ProductImg/@item.product.ImgUrl" alt="@item.product.NameProduct">
+                                                    <div class="short_desc">
+                                                        <a href="~/Products/Details/@item.product.ProductId">
+                                                            <h4>@item.product.NameProduct</h4>
+                                                        </a>
+                                                        <p>Cấu hình</p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <div class="col-lg-3 col-md-2 v_middle">
-                                            <div class="product__additional_info">
-                                                <ul>
-                                                    <li>
-                                                        @item.Quantity
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-lg-4 col-md-3 v_middle">
-                                            <div class="product__price_download">
-                                                <div class="item_price v_middle">
-                                                    <span>@string.Format("{0:#,##0}", item.product.Price) VNĐ</span>
+                                            <div class="col-lg-3 col-md-2 v_middle">
+                                                <div class="product__additional_info">
+                                                    <ul>
+                                                        <li id="Quantity">
+                                                            @item.Quantity
+                                                        </li>
+                                                    </ul>
                                                 </div>
-                                                <div class="item_action v_middle">
-                                                    <form action="~/Products/deleteCart" method="post">
-                                                        <input hidden name="ProductId" value="@item.product.ProductId" />
-                                                        <button style="border: none; background-color: transparent" ; type="submit">
+                                            </div>
+
+                                            <div class="col-lg-4 col-md-3 v_middle">
+                                                <div class="product__price_download">
+                                                    <div class="item_price v_middle">
+                                                        <span>@string.Format("{0:#,##0}", item.product.Price) VNĐ</span>
+                                                    </div>
+                                                    <div class="item_action v_middle">
+                                                        <input hidden name="Price" value="@item.product.Price" />
+                                                        <input hidden name="ProductId" data-id="@item.product.ProductId" />
+                                                        <input hidden name="NameProduct" value="@item.product.NameProduct" />
+                                                        <input hidden name="DiscountId" value="@item.product.DiscountId " />
+                                                        <input hidden name="ImgUrl" value="@item.product.ImgUrl" />
+                                                        <button style="border: none; background-color: transparent" ; type="button" data-id="@item.product.ProductId" class="DeleteItemAjax">
                                                             <div class="remove_from_cart">
                                                                 <span class="lnr lnr-trash"></span>
                                                             </div>
                                                         </button>
-                                                    </form>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            }
+                                }
 
-                        </div>
+                            </div>
 
-                        <div class="row">
-                            <div class="col-md-6 offset-md-6">
-                                <div class="cart_calculation">
-                                    <form action="~/Products/CheckDiscounts" method="post">
-                                        <div class="cart--subtotal">
-                                            <p id="Price"><span>Tổng số tiền: </span>0 VNĐ</p>
-                                            <input hidden name="Sum" value="0" />
+                            <div class="row">
+                                <div class="col-md-6 offset-md-6">
+                                    <div class="cart_calculation">
+                                        <form action="~/Products/CheckDiscounts" method="post">
+                                            <div class="cart--subtotal">
+                                                <p id="Price"><span>Tổng số tiền: </span>0 VNĐ</p>
+                                                <input hidden name="Sum" value="0" />
 
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="card_number">Mã giảm giá</label>
-                                            <input name="DiscountCode" id="card_number" type="text" class="text_field" placeholder="Vui lòng nhập mã giảm giá...">
-                                            <button class="btn btn--round btn--md checkout_link">Kiểm tra mã giảm giá</button>
-                                        </div>
-                                    </form>
-                                    <form action="~/Products/CheckOut" method="post">
-                                        <div class="cart--total">
-                                            <p id="Sum"><span>Tổng số tiền: </span> 0 VNĐ</p>
-                                        </div>
-                                        <button class="btn btn--round btn--md checkout_link">Thanh toán</button>
-                                    </form>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="card_number">Mã giảm giá</label>
+                                                <input name="DiscountCode" id="card_number" type="text" class="text_field" placeholder="Vui lòng nhập mã giảm giá...">
+                                                <button class="btn btn--round btn--md checkout_link">Kiểm tra mã giảm giá</button>
+                                            </div>
+                                        </form>
+                                        <form action="~/Products/CheckOut" method="post">
+                                            <div class="cart--total">
+                                                <p id="Sum"><span>Số tiền phải trả: </span> 0 VNĐ</p>
+                                            </div>
+                                            <button class="btn btn--round btn--md checkout_link">Thanh toán</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                    }
-                    else
-                    {
-                        <h2><strong>Hiện tại không có sản phẩm nào trong giỏ hàng.</strong></h2>
-                    }
+                        }
+                        else
+                        {
+                            <h2><strong>Hiện tại không có sản phẩm nào trong giỏ hàng.</strong></h2>
+                        }
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -116,16 +122,16 @@
 <script>
     @{
         int tmp = 0;
-        if (Model != null)
+        if(Model != null)
         {
-            foreach (var item in Model)
+            foreach(var item in Model)
             {
                 tmp += (int)item.product.Price * item.Quantity;
             }
         }
     }
     document.getElementById('Price').innerHTML = "<p name='Total'><span>Tổng số tiền</span>@tmp VNĐ</p><input hidden name='Sum' value=@tmp />"
-    document.getElementById('Sum').innerHTML = "<p name='Sum'><span>Số tiền phải trả</span>@{
+    document.getElementById('Sum').innerHTML = "<p name='Sum'><span>Số tiền phải trả: </span>@{
         if(TempData["Total"] != null)
         {
             @TempData["Total"];
@@ -134,5 +140,46 @@
         {
             @tmp;
         }
-    } VNĐ</p>"
+     } VNĐ</p>"
+
+    //var quantity = $(".quantity_" + $(this).next().next().attr("data-id")).val();
+    //console.log(quantity);
+    $(document).ready(function () {
+        $(".DeleteItemAjax").on("click", function () {
+            event.preventDefault();
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DeleteCart", "Products")",
+                data: {
+                    id: parseInt($(this).attr("data-id")),
+                    //quantity: quantity
+                },
+                success: function (result) {
+                },
+
+            });
+            var Cart = document.getElementById("Cart").innerHTML;
+            var Quantity = document.getElementById("Quantity").innerHTML;
+
+            let tmpCart = parseInt(Cart) - 1;
+            Quantity -= 1;
+            document.getElementById("Cart").innerHTML = tmpCart;
+            document.getElementById("Quantity").innerHTML = Quantity;
+            //console.log(parseInt($(this).attr("data-id")));
+
+            if (Quantity <= 1) {
+                $(this).parent().parent().parent().parent().remove();
+            }
+
+            if (tmpCart < 1) {
+                var el = document.getElementById('delete');
+                el.remove();
+                document.getElementById("QuantityIsNull").innerHTML = "Hiện tại không có sản phẩm nào trong giỏ hàng."
+            }
+        });
+    });
+
 </script>

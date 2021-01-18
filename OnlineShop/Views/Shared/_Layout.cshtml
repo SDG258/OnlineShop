@@ -10,8 +10,8 @@
     }
     else
     {
-        var data2 = Context.Session.GetString("cart");
-        List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(data2);
+        //var data2 = Context.Session.GetString("cart");
+        List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(data);
         foreach (var item in dataCart)
         {
             coutCart += item.Quantity;
@@ -39,6 +39,8 @@
     <link rel="stylesheet" href="~/User/css/plugins.min.css">
     <link rel="stylesheet" href="~/User/css/style.css">
     <link rel="icon" type="image/png" sizes="16x16" href="~/User/images/favicon.html">
+    <script src="~/User/js/jquery-3.5.1.min.js"></script>
+
 </head>
 
 <body class="preload home3">
@@ -61,7 +63,7 @@
                                     <li class="has_dropdown">
                                         <div class="icon_wrap">
                                             <a href="~/Products/Cart"><span class="lnr lnr-cart"></span></a>
-                                            <span class="notification_count purch"> @coutCart </span>
+                                            <span id="Cart" class="notification_count purch"> @coutCart </span>
                                         </div>
                                     </li>
                                 </ul>
@@ -232,7 +234,7 @@
                             <div class="mainmenu__search">
                                 <form action="#">
                                     <div class="searc-wrap">
-                                        <input type="text" placeholder="Search product">
+                                        <input type="text" placeholder="Tìm kiếm sản phẩm">
                                         <button type="submit" class="search-wrap__btn">
                                             <span class="lnr lnr-magnifier"></span>
                                         </button>
@@ -277,7 +279,7 @@
                         <div class="search">
                             <div class="search__title">
                                 <h3>
-                                    <span>35,270</span> website templates from our creative community
+                                    <span>MartPlace</span> Chào mừng bạn đã đén với MartPlace!!!
                                 </h3>
                             </div>
                             <div class="breadcrumb">
@@ -378,6 +380,7 @@
                                 <li>
                                     <a href="#">Affiliates</a>
                                 </li>
+                                <a href="C:\Users\Song Du\Desktop\OnlineShop\OnlineShop\Views\Shared\_Layout.cshtml">C:\Users\Song Du\Desktop\OnlineShop\OnlineShop\Views\Shared\_Layout.cshtml</a>
                             </ul>
                         </div>
                     </div>

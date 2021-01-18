@@ -10,10 +10,10 @@
         color: white;
     }
 
-    .hover-item:hover {
-        background-color: white;
-        color: blue;
-    }   
+        .hover-item:hover {
+            background-color: white;
+            color: blue;
+        }
 </style>
 <div class="filter-area">
     <div class="container">
@@ -147,19 +147,16 @@
         {
             <div class="col-lg-4 col-md-6">
                 <div class="product product--card">
-
                     <div class="product__thumbnail">
                         <img src="~/ProductImg/@item.ImgUrl" alt="@item.NameProduct">
                         <div class="prod_btn">
-                            <form action="~/Products/AddCart" method="post">
-                                <a href="~/Products/Details/@item.ProductId" class="transparent btn--sm btn--round">Thông tin</a>
-                                <button type="submit" class="transparent btn--sm btn--round hover-item">Thêm</button>
-                                <input hidden name="Price" value="@item.Price" />
-                                <input hidden name="ProductId" value="@item.ProductId" />
-                                <input hidden name="NameProduct" value="@item.NameProduct" />
-                                <input hidden name="DiscountId" value="@item.DiscountId " />
-                                <input hidden name="ImgUrl" value="@item.ImgUrl" />
-                            </form>
+                            <a href="~/Products/Details/@item.ProductId" class="transparent btn--sm btn--round">Thông tin</a>
+                            <button type="button" class="transparent btn--sm btn--round hover-item AddCartAjax">Thêm</button>
+                            <input hidden name="Price" value="@item.Price" />
+                            <input hidden name="ProductId" data-id="@item.ProductId" value="@item.ProductId" />
+                            <input hidden name="NameProduct" value="@item.NameProduct" />
+                            <input hidden name="DiscountId" value="@item.DiscountId " />
+                            <input hidden name="ImgUrl" value="@item.ImgUrl" />
                         </div>
                     </div>
 
@@ -233,7 +230,32 @@
     </div>
 </div>
 @*<br />
-Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-    @Html.PagedListPager(Model, page => Url.Action("Index",
-    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))*@
+        @Html.PagedListPager(Model, page => Url.Action("Index",
+        new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))*@
+<script>
+    $(document).ready(function () {
+        $(".AddCartAjax").click(function (event) {
+            event.preventDefault();
+
+            var Cart = document.getElementById("Cart").innerHTML;
+            let tmp = parseInt(Cart) + 1;
+            document.getElementById("Cart").innerHTML = tmp;
+
+            var quantity = $(".quantity_" + $(this).next().next().attr("data-id")).val();
+
+            $.ajax({
+                type: "POST",
+                url:"@Url.Action("AddCart", "Products")",
+                data: {
+                    id: $(this).next().next().attr("data-id"),
+                    quantity: tmp
+                },
+                success: function (result) {
+                },
+
+            });
+        });
+    });
+</script>

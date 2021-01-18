@@ -166,7 +166,7 @@
                                         </div>
                                         <div class="media-body">
                                             <form action="~/Products/AddCmt" method="post" class="comment-reply-form">
-                                                <textarea name="reply-comment" placeholder="Write your comment..."></textarea>
+                                                <textarea name="Cmt" placeholder="Viết bình luận về sản phẩm..."></textarea>
                                                 <button class="btn btn--sm btn--round">Gửi bình luận</button>
                                             </form>
                                         </div>
@@ -1032,17 +1032,12 @@
                         </ul>
 
                         <div class="purchase-button">
-                            @*<a href="#" class="btn btn--lg btn--round">Mua ngay</a>*@
-                            <form action="~/Products/AddCart" method="post">
-                                <button style="margin-top: 8%;" type="submit" class="btn btn--lg btn--round cart-btn">
-                                    <input hidden name="Price" value="@Html.DisplayFor(model => model.Price)" />
-                                    <input hidden name="ProductId" value="@Html.DisplayFor(model => model.ProductId)" />
-                                    <input hidden name="NameProduct" value="@Html.DisplayFor(model => model.NameProduct)" />
-                                    <input hidden name="DiscountId" value="@Html.DisplayFor(model => model.DiscountId)" />
-                                    <input hidden name="ImgUrl"value="@Html.DisplayFor(model => model.ImgUrl)" />
-                                    <span class="lnr lnr-cart"></span>Thêm vào giỏ hàng
-                                </button>
-                            </form>
+                            <button style="margin-top: 8%;" type="button" class="btn btn--lg btn--round cart-btn AddCartAjax">Thêm vào giỏ hàng</button>
+                            <input hidden name="Price" value="@Html.DisplayFor(model => model.Price)" />
+                            <input hidden name="ProductId" data-id="@Html.DisplayFor(model => model.ProductId)" value="@Html.DisplayFor(model => model.ProductId)" />
+                            <input hidden name="NameProduct" value="@@Html.DisplayFor(model => model.NameProduct)" />
+                            <input hidden name="DiscountId" value="@Html.DisplayFor(model => model.DiscountId)" />
+                            <input hidden name="ImgUrl" value="Html.DisplayFor(model => model.ImgUrl)" />
                         </div>
                     </div>
 
@@ -1121,3 +1116,30 @@
         </div>
     </div>
 </section>
+<script>
+    $(document).ready(function () {
+        $(".AddCartAjax").click(function (event) {
+            event.preventDefault();
+
+            var Cart = document.getElementById("Cart").innerHTML;
+            console.log(Cart);
+            let tmp = parseInt(Cart)+ 1;
+
+            document.getElementById("Cart").innerHTML = tmp;
+
+            var quantity = $(".quantity_" + $(this).next().next().attr("data-id")).val();
+
+            $.ajax({
+                type: "POST",
+                url:"@Url.Action("AddCart", "Products")",
+                data: {
+                    id: $(this).next().next().attr("data-id"),
+                    quantity: quantity
+                },
+                success: function (result) {
+                },
+
+            });
+        });
+    });
+</script>

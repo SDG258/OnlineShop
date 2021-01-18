@@ -106,7 +106,7 @@
                         </div>
 
                         <div class="information__set">
-                            <form action="~/Users/PersonalInformationUpdate" method="post">
+                            <form action="~/Users/Setting" method="post">
                                 <div class="information_wrapper form--fields">
                                     <div class="row">
                                         <div class="col-md-6">
@@ -114,6 +114,7 @@
                                                 <label for="first_name">
                                                     Họ
                                                 </label>
+                                                <span asp-validation-for="FristName" class="text-danger"></span>
                                                 <input type="text" id="first_name" class="text_field" name="FristName" value="@Html.DisplayFor(model => model.FristName)">
                                             </div>
                                         </div>
@@ -123,6 +124,7 @@
                                                 <label for="last_name">
                                                     Tên
                                                 </label>
+                                                <span asp-validation-for="LastName" class="text-danger"></span>
                                                 <input type="text" id="last_name" class="text_field" name="LastName" value="@Html.DisplayFor(model => model.LastName)">
                                             </div>
                                         </div>
@@ -140,24 +142,29 @@
                                         <label for="email1">
                                             Số điện thoại
                                         </label>
+                                        <span asp-validation-for="Phone" class="text-danger"></span>
                                         <input type="number" id="email1" class="text_field" name="Phone" value="@Html.DisplayFor(model => model.Phone)">
                                     </div>
 
                                     <div class="form-group">
                                         <label for="address1">Số nhà, tên đường</label>
+                                        <span asp-validation-for="Address" class="text-danger"></span>
                                         <input type="text" id="address1" class="text_field" name="Address" value="@Html.DisplayFor(model => model.Address)">
                                     </div>
 
                                     <div class="form-group">
                                         <label for="address2">Xã/Phường</label>
+                                        <span asp-validation-for="Ward" class="text-danger"></span>
                                         <input type="text" id="address2" class="text_field" name="Ward" value="@Html.DisplayFor(model => model.Ward)">
                                     </div>
                                     <div class="form-group">
                                         <label for="address2">Quận/Huyện</label>
+                                        <span asp-validation-for="District" class="text-danger"></span>
                                         <input type="text" id="address2" class="text_field" name="District" value="@Html.DisplayFor(model => model.District)">
                                     </div>
                                     <div class="form-group">
                                         <label for="address2">Tỉnh/Thành Phố</label>
+                                        <span asp-validation-for="City" class="text-danger"></span>
                                         <input type="text" id="address2" class="text_field" name="City" value="@Html.DisplayFor(model => model.City)">
                                     </div>
 

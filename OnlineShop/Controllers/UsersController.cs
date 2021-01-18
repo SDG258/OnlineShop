@@ -327,28 +327,72 @@ namespace OnlineShop.Controllers
             return View(users);
         }
         [HttpPost]
-        public async Task<IActionResult> PersonalInformationUpdate(User users)
+        public async Task<IActionResult> Setting(User users)
         {
             var User = HttpContext.Session.GetString("User");
             var userSession = JsonConvert.DeserializeObject<UserSession>(User);
-            var UserForDB = await _context.Users.FindAsync(userSession.Id);
-            if (UserForDB != null)
-            {
-                if (users != null)
-                {
-                    UserForDB.FristName = users.FristName;
-                    UserForDB.LastName = users.LastName;
-                    UserForDB.Phone = users.Phone.Trim();
-                    UserForDB.Address = users.Address;
-                    UserForDB.Ward = users.Ward;
-                    UserForDB.District = users.District;
-                    UserForDB.City = users.City;
+            var userForDB = await _context.Users.FirstOrDefaultAsync(m => m.UserId == userSession.Id);
+            User usersForDB = userForDB;
+            usersForDB.Phone = userForDB.Phone.Trim();
 
-                    _context.Users.Update(UserForDB);
-                    await _context.SaveChangesAsync();
-                }
+            if (users.FristName == null)
+            {
+                ModelState.AddModelError("FristName", "Vui lòng điền thông tin");
+                return View(usersForDB);
             }
-            return RedirectToAction(nameof(Setting));
+            else if(users.LastName == null)
+            {
+                ModelState.AddModelError("LastName", "Vui lòng điền thông tin");
+                return View(usersForDB);
+            }
+            else if (users.Phone == null)
+            {
+                ModelState.AddModelError("Phone", "Vui lòng điền thông tin");
+                return View(usersForDB);
+            }
+            else if (users.Address == null)
+            {
+                ModelState.AddModelError("Address", "Vui lòng điền thông tin");
+                return View(usersForDB);
+            }
+            else if (users.Ward == null)
+            {
+                ModelState.AddModelError("Ward", "Vui lòng điền thông tin");
+                return View(usersForDB);
+            }
+            else if (users.District == null)
+            {
+                ModelState.AddModelError("District", "Vui lòng điền thông tin");
+                return View(usersForDB);
+            }
+            else if (users.City == null)
+            {
+                ModelState.AddModelError("City", "Vui lòng điền thông tin");
+                return View(usersForDB);
+            }
+            else
+            {
+                //var User = HttpContext.Session.GetString("User");
+                //var userSession = JsonConvert.DeserializeObject<UserSession>(User);
+                var UserForDB = await _context.Users.FindAsync(userSession.Id);
+                if (UserForDB != null)
+                {
+                    if (users != null)
+                    {
+                        UserForDB.FristName = users.FristName;
+                        UserForDB.LastName = users.LastName;
+                        UserForDB.Phone = users.Phone.Trim();
+                        UserForDB.Address = users.Address;
+                        UserForDB.Ward = users.Ward;
+                        UserForDB.District = users.District;
+                        UserForDB.City = users.City;
+
+                        _context.Users.Update(UserForDB);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                return RedirectToAction(nameof(Setting));
+            }
         }
         public IActionResult Logout()
         {

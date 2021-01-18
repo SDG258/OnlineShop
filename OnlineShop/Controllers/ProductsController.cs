@@ -44,10 +44,10 @@ namespace OnlineShop.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCmt(Comment comment)
         {
-            //if (discount.DiscountCode == null)
-            //{
-            //    ModelState.AddModelError("DiscountCode", "Vui lòng điền trường này");
-            //}
+            if (comment.Cmt == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
             //Discount NewDiscount = new Discount();
             //NewDiscount.DiscountCode = discount.DiscountCode;
@@ -95,10 +95,16 @@ namespace OnlineShop.Controllers
         //    return RedirectToAction(nameof(Index));
 
         //}
+        public async Task<Product> GetProductAsync(int id)
+        {
+            Product product = await _context.Products.FindAsync(id);
+            return (product);
+        }
 
         [HttpPost]
-        public async Task<IActionResult> AddCart(Product product)
+        public async Task<IActionResult> AddCart(int id, int quantity)
         {
+            Product product = await GetProductAsync(id);
             var cart = HttpContext.Session.GetString("cart");//Kiểm tra session
             if (cart == null)
             {
@@ -110,7 +116,10 @@ namespace OnlineShop.Controllers
                        Quantity = 1
                    }
                 };
-                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(listCart));
+                //HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(listCart));
+                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(listCart, Formatting.Indented, new JsonSerializerSettings {
+                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                }));
             }
 
             else
@@ -133,10 +142,15 @@ namespace OnlineShop.Controllers
                         Quantity = 1
                     });
                 }
-                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart));
+                //HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart));
+                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart, Formatting.Indented, new JsonSerializerSettings
+                {
+                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                }));
             }
-            return Redirect("~/Home/");
+            return Ok(quantity);
         }
+
         //Hiện thị danh sách giỏ hàng
         public async Task<IActionResult> Cart()
         {
@@ -154,38 +168,63 @@ namespace OnlineShop.Controllers
 
             return View();
         }
-        public IActionResult deleteCart(Product product)
-        {
+        public async Task<IActionResult> DeleteCart(int id)
+            {
+            //var cart = HttpContext.Session.GetString("cart");//Kiểm tra session
+            //if (cart != null)
+            //{
+            //    List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(cart);
+
+            //    for (int i = 0; i < dataCart.Count; i++)
+            //    {
+            //        if (dataCart[i].Quantity > 1)
+            //        {
+            //            dataCart[i].Quantity -= 1;
+            //        }
+            //        else
+            //        {
+            //            dataCart.RemoveAt(i);
+            //        }
+            //    }
+            //    //HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart));
+            //    HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart, Formatting.Indented, new JsonSerializerSettings {
+            //        PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            //    }));
+            //    return Ok(dataCart.Count);
+            //}
+            //return Ok();
             var cart = HttpContext.Session.GetString("cart");
             if (cart != null)
             {
                 List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(cart);
-
                 for (int i = 0; i < dataCart.Count; i++)
                 {
-                    if(dataCart[i].Quantity > 1)
+                    if(dataCart[i].product.ProductId == id && dataCart[i].Quantity > 1)
                     {
                         dataCart[i].Quantity -= 1;
                     }
-                    else
+
+                    else if (dataCart[i].product.ProductId == id && dataCart[i].Quantity == 1)
                     {
-                        if (dataCart[i].product.ProductId == product.ProductId)
-                        {
-                            dataCart.RemoveAt(i);
-                        }
+                        dataCart.RemoveAt(i);
                     }
                 }
-                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart));
-                return RedirectToAction(nameof(Cart));
+                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart, Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                }));
+                return Ok(dataCart.Count);
             }
-            return Redirect("~/Home/");
+            return Ok();
         }
+
         [HttpPost]
         public async Task<IActionResult> CheckDiscounts(Discount discount, int Sum)
         {
             var discounts = await _context.Discounts.FirstOrDefaultAsync(x => x.DiscountCode == discount.DiscountCode);
             int Total = 0;
-            if ( discounts!= null)
+            if (discounts != null)
             {
                 DateTime now = DateTime.Now;
                 if (discounts.DiscountCode == discount.DiscountCode && now >= discounts.StartDate && now <= discounts.EndDate && discounts.Used < discounts.AmountOf)
