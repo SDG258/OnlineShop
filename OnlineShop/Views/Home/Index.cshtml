@@ -239,6 +239,11 @@
         $(".AddCartAjax").click(function (event) {
             event.preventDefault();
 
+            tata.success('Thêm thành công', 'Đã thêm sản phẩm vào giỏ hàng', {
+                position: 'tr',
+                animate: 'slide'
+            })
+
             var Cart = document.getElementById("Cart").innerHTML;
             let tmp = parseInt(Cart) + 1;
             document.getElementById("Cart").innerHTML = tmp;
@@ -247,7 +252,8 @@
 
             $.ajax({
                 type: "POST",
-                url:"@Url.Action("AddCart", "Products")",
+                url: "@Url.Action("AddCart", "Products")",
+                async: false,
                 data: {
                     id: $(this).next().next().attr("data-id"),
                     quantity: tmp

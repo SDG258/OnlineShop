@@ -142,8 +142,6 @@
         }
      } VNĐ</p>"
 
-    //var quantity = $(".quantity_" + $(this).next().next().attr("data-id")).val();
-    //console.log(quantity);
     $(document).ready(function () {
         $(".DeleteItemAjax").on("click", function () {
             event.preventDefault();
@@ -151,11 +149,11 @@
 
 
             $.ajax({
+                async: false,
                 type: "POST",
                 url: "@Url.Action("DeleteCart", "Products")",
                 data: {
                     id: parseInt($(this).attr("data-id")),
-                    //quantity: quantity
                 },
                 success: function (result) {
                 },
@@ -168,9 +166,8 @@
             Quantity -= 1;
             document.getElementById("Cart").innerHTML = tmpCart;
             document.getElementById("Quantity").innerHTML = Quantity;
-            //console.log(parseInt($(this).attr("data-id")));
 
-            if (Quantity <= 1) {
+            if (Quantity < 1) {
                 $(this).parent().parent().parent().parent().remove();
             }
 

@@ -1,122 +1,171 @@
-﻿@model IEnumerable<OnlineShop.Models.Product>
+﻿@*@model IEnumerable<OnlineShop.Models.WareHouse>*@
+@using OnlineShop.Models;
+@model ListProductInWaewHouse
 
 @{
     ViewData["Title"] = "Danh sách sản phẩm";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-    <div class="dashboard_contents">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="filter-bar clearfix filter-bar2">
+<div class="dashboard_contents">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="filter-bar clearfix filter-bar2">
 
-                        <div class="dashboard__title pull-left">
-                            <h3>Your Purchases</h3>
+                    <div class="dashboard__title pull-left">
+                        <h3>Your Purchases</h3>
+                    </div>
+
+                    <div class="pull-right">
+                        <div class="filter__option filter--text">
+                            <p>
+                                <span>@Model.ProductViewModel.ToList().Count</span> Products Purchased
+                            </p>
                         </div>
 
-                        <div class="pull-right">
-                            <div class="filter__option filter--text">
-                                <p>
-                                    <span>@Model.ToList().Count</span> Products Purchased
-                                </p>
+                        <div class="filter__option filter--select">
+                            <div class="select-wrap">
+                                <select name="price">
+                                    <option value="low">Price : Low to High</option>
+                                    <option value="high">Price : High to low</option>
+                                </select>
+                                <span class="lnr lnr-chevron-down"></span>
                             </div>
-
-                            <div class="filter__option filter--select">
-                                <div class="select-wrap">
-                                    <select name="price">
-                                        <option value="low">Price : Low to High</option>
-                                        <option value="high">Price : High to low</option>
-                                    </select>
-                                    <span class="lnr lnr-chevron-down"></span>
-                                </div>
-                            </div>
-                            <div class="filter__option filter--select">
-                                <div class="select-wrap">
-                                    <select name="price">
-                                        <option value="12">12 Items per page</option>
-                                        <option value="15">15 Items per page</option>
-                                        <option value="25">25 Items per page</option>
-                                    </select>
-                                    <span class="lnr lnr-chevron-down"></span>
-                                </div>
+                        </div>
+                        <div class="filter__option filter--select">
+                            <div class="select-wrap">
+                                <select name="price">
+                                    <option value="12">12 Items per page</option>
+                                    <option value="15">15 Items per page</option>
+                                    <option value="25">25 Items per page</option>
+                                </select>
+                                <span class="lnr lnr-chevron-down"></span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="product_archive">
-                <div class="title_area">
-                    <div class="row">
-                        <div class="col-md-5">
-                            <h4>Sản phẩm</h4>
-                        </div>
-                        <div class="col-md-3">
-                            <h4 class="add_info">Cấu hình</h4>
-                        </div>
-                        <div class="col-md-2">
-                            <h4>Giá</h4>
-                        </div>
-                        <div class="col-md-2">
-                            <h4>Trạng thái</h4>
-                        </div>
-                    </div>
-                </div>
-                @foreach (var item in Model)
-                {
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="single_product clearfix">
-                                <div class="row">
-                                    <div class="col-lg-5 col-md-5">
-                                        <div class="product__description">
-                                            <img style="width: 7rem; height: 7rem" src="~/ProductImg/@item.ImgUrl" alt="@item.NameProduct">
-                                            <div class="short_desc">
-                                                <h4>@item.Manufacturer.ManufacturerName</h4>
-                                                <h4>@item.NameProduct</h4>
-                                                <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; height: 32px">@item.Note</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-3 col-md-3 col-6 xs-fullwidth">
-                                        <div class="product__additional_info">
-                                            <ul>
-                                                <li>
-                                                    <p>
-                                                        <span>Ram: </span> @item.Ram.Memory
-                                                    </p>
-                                                </li>
-                                                <li class="license">
-                                                    <p>
-                                                        <span>Rom:</span> @item.Rom.Space
-                                                    </p>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-4 col-md-4 col-6 xs-fullwidth">
-                                        <div class="product__price_download">
-                                            <div class="item_price v_middle">
-                                                <span>@string.Format("{0:#,##0}", item.Price)VNĐ</span>
-                                            </div>
-                                            <div class="select-wrap">
-                                                <select name="Status">
-                                                    <option value="0">Còn hàng</option>
-                                                    <option value="1">Hết hàng</option>
-                                                </select>
-                                                <span class="lnr lnr-chevron-down"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
             </div>
         </div>
+
+        <div class="product_archive">
+            <div class="title_area">
+                <div class="row">
+                    <div class="col-md-5">
+                        <h4>Sản phẩm</h4>
+                    </div>
+                    <div class="col-md-3">
+                        <h4 class="add_info">Giá nhập</h4>
+                    </div>
+                    <div class="col-md-2">
+                        <h4>Giá bán</h4>
+                    </div>
+                    <div class="col-md-2">
+                        <h4>Trạng thái</h4>
+                    </div>
+                </div>
+            </div>
+            @foreach (var item in Model.WareHouseiewModel)
+            {
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="single_product clearfix">
+                            <div class="row">
+                                <div class="col-lg-5 col-md-5">
+                                    `
+                                    <div class="product__description">
+                                        <img style="width: 7rem; height: 7rem" src="~/ProductImg/@item.Product.ImgUrl" alt="@item.Product.NameProduct">
+                                        <div class="short_desc">
+                                            <h4>@item.Product.Manufacturer.ManufacturerName</h4>
+                                            <h4>@item.Product.NameProduct</h4>
+                                            <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; height: 32px">@item.Product.Note</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-6 xs-fullwidth">
+                                    <div class="product__price_download">
+                                        <div class="item_price v_middle">
+                                            <span style="color:red">@string.Format("{0:#,##0}", item.Cost)VNĐ</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-md-4 col-6 xs-fullwidth">
+                                    <div class="product__price_download">
+                                        <div class="item_price v_middle">
+                                            <span>@string.Format("{0:#,##0}", item.Product.Price)VNĐ</span>
+                                        </div>
+                                        <div class="select-wrap">
+                                            <select name="Status">
+                                                @{
+                                                    if (@item.QuantityImported > @item.QuantitySold)
+                                                    {
+                                                        <option value="0">Còn hàng</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="1">Hết hàng</option>
+                                                    }
+                                                }
+                                            </select>
+                                            <span class="lnr lnr-chevron-down"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @foreach (var item in Model.ProductViewModel)
+            {
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="single_product clearfix">
+                            <div class="row">
+                                <div class="col-lg-5 col-md-5">
+                                    `
+                                    <div class="product__description">
+                                        <img style="width: 7rem; height: 7rem" src="~/ProductImg/@item.ImgUrl" alt="@item.NameProduct">
+                                        <div class="short_desc">
+                                            <h4>@item.Manufacturer.ManufacturerName</h4>
+                                            <h4>@item.NameProduct</h4>
+                                            <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; height: 32px">@item.Note</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-6 xs-fullwidth">
+                                    <div class="product__price_download">
+                                        <div class="item_price v_middle">
+                                            <span style="color:red">0 VNĐ</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-md-4 col-6 xs-fullwidth">
+                                    <div class="product__price_download">
+                                        <div class="item_price v_middle">
+                                            <span>@string.Format("{0:#,##0}", item.Price)VNĐ</span>
+                                        </div>
+                                        <div class="select-wrap">
+                                            <select name="Status">
+                                                {
+                                                    <option value="1">Hết hàng</option>
+                                                }
+                                            </select>
+                                            <span class="lnr lnr-chevron-down"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
+</div>

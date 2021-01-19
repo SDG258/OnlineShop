@@ -28,8 +28,17 @@ namespace OnlineShop.Areas.Admin.Controllers
         //Hiển thị danh sách sản phẩm
         public async Task<IActionResult> Index()
         {
-            var shoppingContext = _context.Products.OrderByDescending(m => m.ProductId).Include(o => o.Rom).Include(a => a.Ram).Include(m => m.Manufacturer).Include(d => d.Discount);
-            return View(await shoppingContext.ToListAsync());
+            //var shoppingContext = _context.Products.OrderByDescending(m => m.ProductId).Include(o => o.Rom).Include(a => a.Ram).Include(m => m.Manufacturer).Include(d => d.Discount).Include(w => w.WareHouses);
+            //return View(await shoppingContext.ToListAsync());
+            ListProductInWaewHouse listProductInWaewHouse = new ListProductInWaewHouse();
+            var WareHouseContext = _context.WareHouses.OrderBy(m => m.Date).Include(o => o.Product).Include(m => m.Product.Manufacturer).Include(a => a.Product.Ram).Include(o => o.Product.Rom).ToList();
+            var ProductContext = _context.Products.OrderBy(m => m.ProductId).Include(m => m.Manufacturer);
+
+            listProductInWaewHouse.WareHouseiewModel = WareHouseContext.ToList();
+            listProductInWaewHouse.ProductViewModel = ProductContext.ToList();
+
+            return View(listProductInWaewHouse);
+
         }
         //Thêm sảm phẩm
         public async Task<IActionResult> AddProduct()

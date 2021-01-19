@@ -1121,6 +1121,11 @@
         $(".AddCartAjax").click(function (event) {
             event.preventDefault();
 
+            tata.success('Thêm thành công', 'Đã thêm sản phẩm vào giỏ hàng', {
+                position: 'tr',
+                animate: 'slide'
+            })
+
             var Cart = document.getElementById("Cart").innerHTML;
             console.log(Cart);
             let tmp = parseInt(Cart)+ 1;
