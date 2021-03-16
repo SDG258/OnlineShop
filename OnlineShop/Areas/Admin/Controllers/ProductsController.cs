@@ -28,16 +28,16 @@ namespace OnlineShop.Areas.Admin.Controllers
         //Hiển thị danh sách sản phẩm
         public async Task<IActionResult> Index()
         {
-            //var shoppingContext = _context.Products.OrderByDescending(m => m.ProductId).Include(o => o.Rom).Include(a => a.Ram).Include(m => m.Manufacturer).Include(d => d.Discount).Include(w => w.WareHouses);
-            //return View(await shoppingContext.ToListAsync());
-            ListProductInWaewHouse listProductInWaewHouse = new ListProductInWaewHouse();
-            var WareHouseContext = _context.WareHouses.OrderBy(m => m.Date).Include(o => o.Product).Include(m => m.Product.Manufacturer).Include(a => a.Product.Ram).Include(o => o.Product.Rom).ToList();
-            var ProductContext = _context.Products.OrderBy(m => m.ProductId).Include(m => m.Manufacturer);
+            var shoppingContext = _context.WareHouses.OrderByDescending(m => m.Date).Include(p => p.Product).Include(m => m.Product.Manufacturer).Include(a => a.Product.Ram).Include(o => o.Product.Rom);
+            return View(await shoppingContext.ToListAsync());
+            //ListProductInWaewHouse listProductInWaewHouse = new ListProductInWaewHouse();
+            //var WareHouseContext = _context.WareHouses.OrderBy(m => m.Date).Include(o => o.Product).Include(m => m.Product.Manufacturer).Include(a => a.Product.Ram).Include(o => o.Product.Rom).ToList();
+            //var ProductContext = _context.Products.OrderBy(m => m.ProductId).Include(m => m.Manufacturer);
 
-            listProductInWaewHouse.WareHouseiewModel = WareHouseContext.ToList();
-            listProductInWaewHouse.ProductViewModel = ProductContext.ToList();
+            //listProductInWaewHouse.WareHouseiewModel = WareHouseContext.ToList();
+            //listProductInWaewHouse.ProductViewModel = ProductContext.ToList();
 
-            return View(listProductInWaewHouse);
+            //return View(listProductInWaewHouse);
 
         }
         //Thêm sảm phẩm
@@ -63,7 +63,7 @@ namespace OnlineShop.Areas.Admin.Controllers
             return Manufacturer.ManufacturerName + "_" + product.NameProduct + "_" + Ram.Memory + "_" + Rom.Space + Path.GetExtension(fileName);
         }
         [HttpPost]
-        public async Task<IActionResult> AddProduct(ProImgAndModelduct product, Rom rom, Ram ram)
+        public async Task<IActionResult> AddProduct(WareHouse warehouse, ProImgAndModelduct product, Rom rom, Ram ram)
         {
             if (product.NameProduct == null)
             {
@@ -88,12 +88,22 @@ namespace OnlineShop.Areas.Admin.Controllers
             productNew.Note = product.Note;
             productNew.Price = product.Price;
 
-            _context.Products.Update(productNew);
+            _context.Products.Add(productNew);
+            await _context.SaveChangesAsync();
+            DateTime createDate = DateTime.Now;
+
+            WareHouse wareHouse = new WareHouse()
+            {
+                ProductId = productNew.ProductId,
+                Cost = warehouse.Cost,
+                QuantityImported = warehouse.QuantityImported,
+                QuantitySold = 0,
+                Date = createDate,
+            };
+            _context.WareHouses.Add(wareHouse);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
-
         }
-
     }
 }

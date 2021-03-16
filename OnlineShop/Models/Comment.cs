@@ -7,18 +7,13 @@ namespace OnlineShop.Models
 {
     public partial class Comment
     {
-        public Comment()
-        {
-            Products = new HashSet<Product>();
-        }
-
         public int? ProductId { get; set; }
         public int? UserId { get; set; }
         public string Cmt { get; set; }
-        public string CommentsId { get; set; }
+        public int CommentsId { get; set; }
+        public DateTime? CreateAt { get; set; }
 
         public virtual Product Product { get; set; }
         public virtual User User { get; set; }
-        public virtual ICollection<Product> Products { get; set; }
     }
 }

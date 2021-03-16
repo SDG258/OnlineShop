@@ -3,6 +3,7 @@
 @{
     var data = Context.Session.GetString("cart");
 
+
     int coutCart = 0;
     if (data == null)
     {
@@ -41,7 +42,11 @@
     <link rel="icon" type="image/png" sizes="16x16" href="~/User/images/favicon.html">
     <script src="~/User/js/jquery-3.5.1.min.js"></script>
     <script src="~/User/dist/tata.js"></script>
-    
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 </head>
 
@@ -64,7 +69,7 @@
                                 <ul>
                                     <li class="has_dropdown">
                                         <div class="icon_wrap">
-                                            <a href="~/Products/Cart"><span class="lnr lnr-cart"></span></a>
+                                            <a href="~/Cart"><span class="lnr lnr-cart"></span></a>
                                             <span id="Cart" class="notification_count purch"> @coutCart </span>
                                         </div>
                                     </li>
@@ -77,9 +82,9 @@
                                 </div>
 
                                 @{
-                                    var User = Context.Session.GetString("User");
+                                    var user = Context.Session.GetString("User");
 
-                                    if (User == null)
+                                    if (user == null)
                                     {
                                         <div class="autor__info">
                                             <p class="name"><a href="~/Users/Login">Đăng nhập</a><a href="~/Users/Register">/Đăng ký</a></p>
@@ -87,9 +92,9 @@
                                     }
                                     else
                                     {
-                                        UserSession UserForDB = JsonConvert.DeserializeObject<UserSession>(User);
+                                        User userInfo = JsonConvert.DeserializeObject<User>(user);
                                         <div class="autor__info">
-                                            <p class="name">Xin chào, @UserForDB.Name</p>
+                                            <p class="name">Xin chào, @userInfo.FristName @userInfo.LastName</p>
                                         </div>
                                         <div class="dropdowns dropdown--author">
                                             <ul>
@@ -283,12 +288,6 @@
                                 <h3>
                                     <span>MartPlace</span> Chào mừng bạn đã đén với MartPlace!!!
                                 </h3>
-                            </div>
-                            <div class="breadcrumb">
-                                <ul>
-                                    <li></li>
-                                    <li></li>
-                                </ul>
                             </div>
                         </div>
                     </div>

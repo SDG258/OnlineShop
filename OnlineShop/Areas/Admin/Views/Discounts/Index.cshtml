@@ -10,7 +10,7 @@
                 <div class="dashboard_title_area">
                     <div class="pull-left">
                         <div class="dashboard__title">
-                            <h3>Danh sách mã giảm giá</h3>
+                            <h3>Danh các hãng giảm giá</h3>
                         </div>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                                 <thead>
                                     <tr>
                                         <th>Giảm</th>
-                                        <th>Mã</th>
+                                        <th>Hãng áp dụng</th>
                                         <th>Số lượng</th>
                                         <th>Đã dùng</th>
                                         <th>Ghi chú</th>
@@ -41,7 +41,7 @@
                                     {
                                     <tr>
                                         <td class="author">@item.DiscountPercent %</td>
-                                        <td class="detail">@item.DiscountCode</td>
+                                        <td class="detail">@item.Manufacturer.ManufacturerName</td>
                                         <td>@item.AmountOf</td>
                                         <td>@item.Used</td>
                                         <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width:32px">@item.Note</td>

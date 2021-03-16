@@ -1,7 +1,14 @@
-﻿@model OnlineShop.Models.Product
+﻿@using Microsoft.AspNetCore.Http;
+@using Newtonsoft.Json;
+@model OnlineShop.Models.Product
 @{ ViewData["Title"] = "Chi tiết sản phẩm";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .StartColor {
+        color: #FFC000;
+    }
+</style>
 <section class="single-product-desc">
     <div class="container">
         <div class="row">
@@ -75,10 +82,10 @@
                                 <a href="#product-details" class="active" aria-controls="product-details" role="tab" data-toggle="tab">Chi tiết</a>
                             </li>
                             <li>
-                                <a href="#product-comment" aria-controls="product-comment" role="tab" data-toggle="tab">Nhận xét</a>
+                                <a href="#product-comment" aria-controls="product-comment" role="tab" data-toggle="tab">Nhận xét<span>(@Model.Comments.Count())</span></a>
                             </li>
                             <li>
-                                <a href="#product-review" aria-controls="product-review" role="tab" data-toggle="tab">Đánh giá<span>(35)</span></a>
+                                <a href="#product-review" aria-controls="product-review" role="tab" data-toggle="tab">Đánh giá<span>(@Model.Rates.Count())</span></a>
                             </li>
                             <li>
                                 <a href="#product-support" aria-controls="product-support" role="tab" data-toggle="tab">Hỗ trợ</a>
@@ -97,10 +104,98 @@
                             </div>
                         </div>
 
+
                         <div class="tab-pane fade product-tab" id="product-comment">
                             <div class="thread">
+                                @{
+                                    var user = Context.Session.GetString("User");
+
+                                    if (user != null)
+                                    {
+                                        <div class="comment-form-area">
+                                            <h4>Hãy để lại bình luận về sản phẩm</h4>
+                                            <div class="media comment-form">
+                                                <div class="media-left">
+                                                    <a href="#">
+                                                        <img class="media-object" src="~/User/images/m7.png" alt="Commentator Avatar">
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <form action="~/Products/AddCmt" method="post" class="comment-reply-form">
+                                                        <textarea name="Cmt" placeholder="Viết bình luận về sản phẩm..."></textarea>
+                                                        <input hidden name="ProductId" value="@Model.ProductId" />
+                                                        <button style="float:right;" class="btn btn--sm btn--round">Gửi bình luận</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="comment-form-area">
+                                            <h4>Vui lòng <a href="~/Users/Login">đăng nhập</a> để bình luận</h4>
+                                        </div>
+                                    }
+                                }
                                 <ul class="media-list thread-list">
-                                    <li class="single-thread">
+                                    @{
+                                        if (Model.Comments.Count >= 1)
+                                        {
+                                            @foreach (var item in Model.Comments)
+                                            {
+                                                <li class="single-thread">
+                                                    <div class="media">
+                                                        <div class="media-left">
+                                                            <a href="#">
+                                                                <img class="media-object" src="~/User/images/m1.png" alt="Commentator Avatar">
+                                                            </a>
+                                                        </div>
+                                                        <div class="media-body">
+
+                                                            <div>
+                                                                <div class="media-heading">
+                                                                    <h4>@item.User.LastName</h4>
+                                                                    <span>@item.CreateAt</span>
+                                                                </div>
+                                                                @*<span class="comment-tag buyer">@item.</span>*@
+                                                            </div>
+                                                            <p>
+                                                                @item.Cmt
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+                                        }
+                                    }
+                                </ul>
+                                @{
+                                    if (Model.Comments.Count() > 3)
+                                    {
+                                        <div class="pagination-area pagination-area2">
+                                            <nav class="navigation pagination " role="navigation">
+                                                <div class="nav-links">
+                                                    <a class="page-numbers current" href="#">1</a>
+                                                    <a class="page-numbers" href="#">2</a>
+                                                    <a class="page-numbers" href="#">3</a>
+                                                    <a class="next page-numbers" href="#">
+                                                        <span class="lnr lnr-arrow-right"></span>
+                                                    </a>
+                                                </div>
+                                            </nav>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+                        <div class="tab-pane fade product-tab" id="product-review">
+                            <div class="thread thread_review">
+                                @{
+                                    if (user != null)
+                                    {
+                                        var dataUser = JsonConvert.DeserializeObject<User>(user);
+                                        <h4 style=" margin-left: 20px; margin-bottom: 20px;">Hãy để lại đánh giá về sản phẩm</h4>
                                         <div class="media">
                                             <div class="media-left">
                                                 <a href="#">
@@ -110,68 +205,97 @@
                                             <div class="media-body">
                                                 <div>
                                                     <div class="media-heading">
-                                                        <a href="author.html">
-                                                            <h4>Themexylum</h4>
-                                                        </a>
-                                                        <span>9 Hours Ago</span>
+                                                        <div class="rating product--rating rate">
+                                                            <i class="fas fa-star check"></i>
+                                                            <i class="fas fa-star check"></i>
+                                                            <i class="fas fa-star check"></i>
+                                                            <i class="fas fa-star check"></i>
+                                                            <i class="fas fa-star check"></i>
+                                                        </div>
                                                     </div>
-                                                    <span class="comment-tag buyer">Purchased</span>
                                                 </div>
-                                                <p>
-                                                    Nunc placerat mi id nisi interdum mollis. Praesent pharetra, justo ut
-                                                    sceleris que the mattis, leo quam aliquet congue placerat mi id nisi
-                                                    interdum mollis.
-                                                </p>
+                                                <div style="padding-left: 5px; padding-top: 5px;" class="comment-form-area">
+                                                    <div class="media comment-form">
+                                                        <div class="media-body">
+                                                            <textarea name="Comments" id="Comments" placeholder="Viết bình đánh giá về sản phẩm..."></textarea>
+                                                            <input hidden name="ProductId" value="@Model.ProductId" />
+                                                            <button style="float: right;" class="btn btn--sm btn--round" onclick="Rate()">Gửi đánh giá</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-
-
-                                        <div class="media depth-2 reply-comment">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m2.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <form action="#" class="comment-reply-form">
-                                                    <textarea class="bla" name="reply-comment" placeholder="Write your comment..."></textarea>
-                                                    <button class="btn btn--md btn--round">Post Comment</button>
-                                                </form>
-                                            </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="comment-form-area">
+                                            <h4>Vui lòng <a href="~/Users/Login">đăng nhập</a> để đánh giá</h4>
                                         </div>
-                                    </li>
-
+                                    }
+                                }
+                                <ul class="media-list thread-list user-Cmt">
+                                    @{
+                                        if (Model.Rates.Count >= 1)
+                                        {
+                                            @foreach (var item in Model.Rates)
+                                            {
+                                                <li class="single-thread">
+                                                    <div class="media">
+                                                        <div class="media-left">
+                                                            <img class="media-object" src="~/User/images/m1.png" alt="Commentator Avatar">
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <div>
+                                                                <div class="media-heading">
+                                                                    @*<h4>@item.User.LastName</h4>*@
+                                                                    <span style="margin: 0;">@item.CreatAt</span>
+                                                                    <br />
+                                                                    <div class="rating product--rating">
+                                                                        @{
+                                                                            for (int i = 1; i <= 5; i++)
+                                                                            {
+                                                                                if (i <= @item.Level)
+                                                                                {
+                                                                                    <i class="fas fa-star StartColor"></i>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <i class="fas fa-star"></i>
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                                @*<span class="comment-tag buyer"></span>*@
+                                                            </div>
+                                                            <p>
+                                                                @item.Comments
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+                                        }
+                                    }
                                 </ul>
+                                @{
+                                    if (Model.Comments.Count() > 3)
+                                    {
+                                        <div class="pagination-area pagination-area2">
+                                            <nav class="navigation pagination " role="navigation">
+                                                <div class="nav-links">
+                                                    <a class="page-numbers current" href="#">1</a>
+                                                    <a class="page-numbers" href="#">2</a>
+                                                    <a class="page-numbers" href="#">3</a>
+                                                    <a class="next page-numbers" href="#">
+                                                        <span class="lnr lnr-arrow-right"></span>
+                                                    </a>
+                                                </div>
+                                            </nav>
+                                        </div>
+                                    }
 
-                                <div class="pagination-area pagination-area2">
-                                    <nav class="navigation pagination " role="navigation">
-                                        <div class="nav-links">
-                                            <a class="page-numbers current" href="#">1</a>
-                                            <a class="page-numbers" href="#">2</a>
-                                            <a class="page-numbers" href="#">3</a>
-                                            <a class="next page-numbers" href="#">
-                                                <span class="lnr lnr-arrow-right"></span>
-                                            </a>
-                                        </div>
-                                    </nav>
-                                </div>
-
-                                <div class="comment-form-area">
-                                    <h4>Leave a comment</h4>
-                                    <div class="media comment-form">
-                                        <div class="media-left">
-                                            <a href="#">
-                                                <img class="media-object" src="~/User/images/m7.png" alt="Commentator Avatar">
-                                            </a>
-                                        </div>
-                                        <div class="media-body">
-                                            <form action="~/Products/AddCmt" method="post" class="comment-reply-form">
-                                                <textarea name="Cmt" placeholder="Viết bình luận về sản phẩm..."></textarea>
-                                                <button class="btn btn--sm btn--round">Gửi bình luận</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
+                                }
                             </div>
                         </div>
 
@@ -179,639 +303,22 @@
                             <div class="thread thread_review">
                                 <ul class="media-list thread-list">
                                     <li class="single-thread">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m1.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="clearfix">
-                                                    <div class="pull-left">
-                                                        <div class="media-heading">
-                                                            <a href="author.html">
-                                                                <h4>Themexylum</h4>
-                                                            </a>
-                                                            <span>9 Hours Ago</span>
-                                                        </div>
-                                                        <div class="rating product--rating">
-                                                            <ul>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star-half-o"></span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <span class="review_tag">support</span>
-                                                    </div>
-                                                    <a href="#" class="reply-link">Reply</a>
+                                        <div class="pagination-area pagination-area2">
+                                            <nav class="navigation pagination " role="navigation">
+                                                <div class="nav-links">
+                                                    <a class="page-numbers current" href="#">1</a>
+                                                    <a class="page-numbers" href="#">2</a>
+                                                    <a class="page-numbers" href="#">3</a>
+                                                    <a class="next page-numbers" href="#">
+                                                        <span class="lnr lnr-arrow-right"></span>
+                                                    </a>
                                                 </div>
-                                                <p>
-                                                    Nunc placerat mi id nisi interdum mollis. Praesent pharetra, justo ut
-                                                    sceleris que the mattis, leo quam aliquet congue placerat mi id nisi
-                                                    interdum mollis.
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="media depth-2 reply-comment">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m2.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <form action="#" class="comment-reply-form">
-                                                    <textarea class="bla" name="reply-comment" placeholder="Write your comment..."></textarea>
-                                                    <button class="btn btn--md btn--round">Post Comment</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li class="single-thread">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m4.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="clearfix">
-                                                    <div class="pull-left">
-                                                        <div class="media-heading">
-                                                            <a href="author.html">
-                                                                <h4>Codepoet_Biplob</h4>
-                                                            </a>
-                                                            <span>9 Hours Ago</span>
-                                                        </div>
-                                                        <div class="rating product--rating">
-                                                            <ul>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star-half-o"></span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <span class="review_tag">code quality</span>
-                                                    </div>
-                                                    <a href="#" class="reply-link">Reply</a>
-                                                </div>
-                                                <p>Awesome theme. All in one Business Website Solutions.</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="media depth-2 reply-comment">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m2.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <form action="#" class="comment-reply-form">
-                                                    <textarea class="bla" name="reply-comment" placeholder="Write your comment..."></textarea>
-                                                    <button class="btn btn--md btn--round">Post Comment</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li class="single-thread">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m5.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="clearfix">
-                                                    <div class="pull-left">
-                                                        <div class="media-heading">
-                                                            <a href="author.html">
-                                                                <h4>PaglaGhora</h4>
-                                                            </a>
-                                                            <span>9 Hours Ago</span>
-                                                        </div>
-                                                        <div class="rating product--rating">
-                                                            <ul>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star-half-o"></span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <span class="review_tag">design quality</span>
-                                                    </div>
-                                                    <a href="#" class="reply-link">Reply</a>
-                                                </div>
-                                                <p>Best theme ever....</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="media depth-2 reply-comment">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m2.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <form action="#" class="comment-reply-form">
-                                                    <textarea class="bla" name="reply-comment" placeholder="Write your comment..."></textarea>
-                                                    <button class="btn btn--md btn--round">Post Comment</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li class="single-thread">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m6.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="clearfix">
-                                                    <div class="pull-left">
-                                                        <div class="media-heading">
-                                                            <a href="author.html">
-                                                                <h4>Hearingorg</h4>
-                                                            </a>
-                                                            <span>12 days Ago</span>
-                                                        </div>
-                                                        <div class="rating product--rating">
-                                                            <ul>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star-half-o"></span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <span class="review_tag">support</span>
-                                                    </div>
-                                                    <a href="#" class="reply-link">Reply</a>
-                                                </div>
-                                                <p>
-                                                    Very helpful support - above and beyond is my experience and I have purchased
-                                                    this theme many times for my clients.
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="media depth-2 reply-comment">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m2.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <form action="#" class="comment-reply-form">
-                                                    <textarea class="bla" name="reply-comment" placeholder="Write your comment..."></textarea>
-                                                    <button class="btn btn--md btn--round">Post Comment</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li class="single-thread">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m7.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="clearfix">
-                                                    <div class="pull-left">
-                                                        <div class="media-heading">
-                                                            <a href="author.html">
-                                                                <h4>ecom1206</h4>
-                                                            </a>
-                                                            <span>5 Hours Ago</span>
-                                                        </div>
-                                                        <div class="rating product--rating">
-                                                            <ul>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star-half-o"></span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <span class="review_tag">code quality</span>
-                                                    </div>
-                                                    <a href="#" class="reply-link">Reply</a>
-                                                </div>
-                                                <p>Awesome theme. All in one Business Website Solutions.</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="media depth-2 reply-comment">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m2.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <form action="#" class="comment-reply-form">
-                                                    <textarea class="bla" name="reply-comment" placeholder="Write your comment..."></textarea>
-                                                    <button class="btn btn--md btn--round">Post Comment</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li class="single-thread">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m8.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="clearfix">
-                                                    <div class="pull-left">
-                                                        <div class="media-heading">
-                                                            <a href="author.html">
-                                                                <h4>Mr.Mango</h4>
-                                                            </a>
-                                                            <span>1 month day</span>
-                                                        </div>
-                                                        <div class="rating product--rating">
-                                                            <ul>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star-o" aria-hidden="true"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star-o" aria-hidden="true"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star-o" aria-hidden="true"></span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <span class="review_tag">design quality</span>
-                                                    </div>
-                                                    <a href="#" class="reply-link">Reply</a>
-                                                </div>
-                                                <p>Retina logo won't work retina logo won't work</p>
-                                            </div>
-                                        </div>
-
-                                        <ul class="children">
-                                            <li class="single-thread depth-2">
-                                                <div class="media">
-                                                    <div class="media-left">
-                                                        <a href="#">
-                                                            <img class="media-object" src="~/User/images/m2.png" alt="Commentator Avatar">
-                                                        </a>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <div class="media-heading">
-                                                            <h4>AazzTech</h4>
-                                                            <span>6 Hours Ago</span>
-                                                        </div>
-                                                        <span class="comment-tag author">Author</span>
-                                                        <p>
-                                                            Nunc placerat mi id nisi interdum mollis. Praesent pharetra,
-                                                            justo ut sceleris que the mattis, leo quam aliquet congue
-                                                            placerat mi id nisi interdum mollis.
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                            </li>
-                                        </ul>
-
-                                        <div class="media depth-2 reply-comment">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m2.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <form action="#" class="comment-reply-form">
-                                                    <textarea class="bla" name="reply-comment" placeholder="Write your comment..."></textarea>
-                                                    <button class="btn btn--md btn--round">Post Comment</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li class="single-thread">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m6.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="clearfix">
-                                                    <div class="pull-left">
-                                                        <div class="media-heading">
-                                                            <a href="author.html">
-                                                                <h4>Hearingorg</h4>
-                                                            </a>
-                                                            <span>12 days Ago</span>
-                                                        </div>
-                                                        <div class="rating product--rating">
-                                                            <ul>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star-half-o"></span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <span class="review_tag">support</span>
-                                                    </div>
-                                                    <a href="#" class="reply-link">Reply</a>
-                                                </div>
-                                                <p>
-                                                    Very helpful support - above and beyond is my experience and I have purchased
-                                                    this theme many times for my clients.
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="media depth-2 reply-comment">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m2.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <form action="#" class="comment-reply-form">
-                                                    <textarea class="bla" name="reply-comment" placeholder="Write your comment..."></textarea>
-                                                    <button class="btn btn--md btn--round">Post Comment</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li class="single-thread">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m9.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="clearfix">
-                                                    <div class="pull-left">
-                                                        <div class="media-heading">
-                                                            <a href="author.html">
-                                                                <h4>Tueld</h4>
-                                                            </a>
-                                                            <span>23 Minutes Ago</span>
-                                                        </div>
-                                                        <div class="rating product--rating">
-                                                            <ul>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star-half-o"></span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <span class="review_tag">code quality</span>
-                                                    </div>
-                                                    <a href="#" class="reply-link">Reply</a>
-                                                </div>
-                                                <p>
-                                                    Nunc placerat mi id nisi interdum mollis. Praesent pharetra, justo ut
-                                                    sceleris que the mattis, leo quam aliquet congue placerat mi id nisi
-                                                    interdum mollis.
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="media depth-2 reply-comment">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m2.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <form action="#" class="comment-reply-form">
-                                                    <textarea class="bla" name="reply-comment" placeholder="Write your comment..."></textarea>
-                                                    <button class="btn btn--md btn--round">Post Comment</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li class="single-thread">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m3.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="clearfix">
-                                                    <div class="pull-left">
-                                                        <div class="media-heading">
-                                                            <a href="author.html">
-                                                                <h4>Living Potato</h4>
-                                                            </a>
-                                                            <span>3 months ago</span>
-                                                        </div>
-                                                        <div class="rating product--rating">
-                                                            <ul>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star-half-o"></span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <span class="review_tag">customization</span>
-                                                    </div>
-                                                    <a href="#" class="reply-link">Reply</a>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="media depth-2 reply-comment">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m2.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <form action="#" class="comment-reply-form">
-                                                    <textarea class="bla" name="reply-comment" placeholder="Write your comment..."></textarea>
-                                                    <button class="btn btn--md btn--round">Post Comment</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li class="single-thread">
-                                        <div class="media">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m6.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <div class="clearfix">
-                                                    <div class="pull-left">
-                                                        <div class="media-heading">
-                                                            <a href="author.html">
-                                                                <h4>Visual-Eggs</h4>
-                                                            </a>
-                                                            <span>125 years ago</span>
-                                                        </div>
-                                                        <div class="rating product--rating">
-                                                            <ul>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star"></span>
-                                                                </li>
-                                                                <li>
-                                                                    <span class="fa fa-star-half-o"></span>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                                        <span class="review_tag">support</span>
-                                                    </div>
-                                                    <a href="#" class="reply-link">Reply</a>
-                                                </div>
-                                                <p>
-                                                    This is the finest art in the history of whateverland. Pastor: No it's
-                                                    a witchcraft.
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="media depth-2 reply-comment">
-                                            <div class="media-left">
-                                                <a href="#">
-                                                    <img class="media-object" src="~/User/images/m2.png" alt="Commentator Avatar">
-                                                </a>
-                                            </div>
-                                            <div class="media-body">
-                                                <form action="#" class="comment-reply-form">
-                                                    <textarea class="bla" name="reply-comment" placeholder="Write your comment..."></textarea>
-                                                    <button class="btn btn--md btn--round">Post Comment</button>
-                                                </form>
-                                            </div>
+                                            </nav>
                                         </div>
                                     </li>
                                 </ul>
 
-                                <div class="pagination-area pagination-area2">
-                                    <nav class="navigation pagination " role="navigation">
-                                        <div class="nav-links">
-                                            <a class="page-numbers current" href="#">1</a>
-                                            <a class="page-numbers" href="#">2</a>
-                                            <a class="page-numbers" href="#">3</a>
-                                            <a class="next page-numbers" href="#">
-                                                <span class="lnr lnr-arrow-right"></span>
-                                            </a>
-                                        </div>
-                                    </nav>
-                                </div>
+
                             </div>
                         </div>
 
@@ -1057,7 +564,7 @@
                             </li>
                             <li>
                                 <p>
-                                    <span class="lnr lnr-bubble mcolor3"></span>Nhấnk xét
+                                    <span class="lnr lnr-bubble mcolor3"></span>Nhận xét
                                 </p>
                                 <span>35</span>
                             </li>
@@ -1117,18 +624,70 @@
     </div>
 </section>
 <script>
+    var rate = 0;
+    var Check = document.getElementsByClassName('check');
+    for (let i = 0; i < Check.length; i++) {
+        Check[i].addEventListener('click', function () {
+            var itemClick = event.target;
+            console.log(itemClick);
+            if (itemClick.className.split(' ').length <= 3) {
+                itemClick.className += ' ' + 'StartColor';
+                for (let k = 0; k < i; k++) {
+                    if (Check[k].className.split(' ')[3] !== 'StartColor') {
+                        Check[k].className += ' ' + 'StartColor';
+                    }
+                }
+            }
+            else {
+                for (let k = i + 1; k < Check.length; k++) {
+                    Check[k].classList.remove('StartColor');
+                }
+            }
+            rate = i + 1;
+        });
+
+    }
+    function Rate() {
+        if (@user != null) {
+            @{ var x = JsonConvert.DeserializeObject<User>(user);}
+            let comment = $("#Comments").val();
+            let UserId = @x.UserId;
+            tata.success('Thêm thành công', 'Đã thêm bình luận cho sản phẩn thàng công', {
+            duration: 1000,
+            position: 'tr',
+            animate: 'slide'
+            })
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "@Url.Action("Rate", "Products")",
+                data: {
+                    ProductId: @Html.DisplayFor(model => model.ProductId),
+                    UserId: UserId,
+                    Level: rate,
+                    Comments: comment
+                },
+                success: function (data) {
+                        console.log(data);
+                        console.log(data.UserId);
+
+                    },
+            });
+        }
+    }
     $(document).ready(function () {
         $(".AddCartAjax").click(function (event) {
             event.preventDefault();
 
             tata.success('Thêm thành công', 'Đã thêm sản phẩm vào giỏ hàng', {
+                duration: 1000,
                 position: 'tr',
                 animate: 'slide'
             })
 
             var Cart = document.getElementById("Cart").innerHTML;
             console.log(Cart);
-            let tmp = parseInt(Cart)+ 1;
+            let tmp = parseInt(Cart) + 1;
 
             document.getElementById("Cart").innerHTML = tmp;
 
@@ -1136,6 +695,7 @@
 
             $.ajax({
                 type: "POST",
+                async: false,
                 url:"@Url.Action("AddCart", "Products")",
                 data: {
                     id: $(this).next().next().attr("data-id"),

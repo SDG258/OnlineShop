@@ -1,6 +1,6 @@
-﻿@*@model IEnumerable<OnlineShop.Models.WareHouse>*@
-@using OnlineShop.Models;
-@model ListProductInWaewHouse
+﻿@model IEnumerable<OnlineShop.Models.WareHouse>
+@*@using OnlineShop.Models;
+    @model ListProductInWaewHouse*@
 
 @{
     ViewData["Title"] = "Danh sách sản phẩm";
@@ -20,7 +20,7 @@
                     <div class="pull-right">
                         <div class="filter__option filter--text">
                             <p>
-                                <span>@Model.ProductViewModel.ToList().Count</span> Products Purchased
+                                <span>@Model.ToList().Count</span> Products Purchased
                             </p>
                         </div>
 
@@ -65,7 +65,7 @@
                     </div>
                 </div>
             </div>
-            @foreach (var item in Model.WareHouseiewModel)
+            @foreach (var item in Model)
             {
 
                 <div class="row">
@@ -119,7 +119,7 @@
                     </div>
                 </div>
             }
-            @foreach (var item in Model.ProductViewModel)
+            @*@foreach (var item in Model)
             {
 
                 <div class="row">
@@ -129,11 +129,11 @@
                                 <div class="col-lg-5 col-md-5">
                                     `
                                     <div class="product__description">
-                                        <img style="width: 7rem; height: 7rem" src="~/ProductImg/@item.ImgUrl" alt="@item.NameProduct">
+                                        <img style="width: 7rem; height: 7rem" src="~/ProductImg/@item.Product.ImgUrl" alt="@item.Product.NameProduct">
                                         <div class="short_desc">
-                                            <h4>@item.Manufacturer.ManufacturerName</h4>
-                                            <h4>@item.NameProduct</h4>
-                                            <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; height: 32px">@item.Note</p>
+                                            <h4>@item.Product.Manufacturer.ManufacturerName</h4>
+                                            <h4>@item.Product.NameProduct</h4>
+                                            <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; height: 32px">@item.Product.Note</p>
                                         </div>
                                     </div>
                                 </div>
@@ -149,12 +149,12 @@
                                 <div class="col-lg-4 col-md-4 col-6 xs-fullwidth">
                                     <div class="product__price_download">
                                         <div class="item_price v_middle">
-                                            <span>@string.Format("{0:#,##0}", item.Price)VNĐ</span>
+                                            <span>@string.Format("{0:#,##0}", item.Product.Price)VNĐ</span>
                                         </div>
                                         <div class="select-wrap">
                                             <select name="Status">
                                                 {
-                                                    <option value="1">Hết hàng</option>
+                                                <option value="1">Hết hàng</option>
                                                 }
                                             </select>
                                             <span class="lnr lnr-chevron-down"></span>
@@ -165,7 +165,7 @@
                         </div>
                     </div>
                 </div>
-            }
+            }*@
         </div>
     </div>
 </div>

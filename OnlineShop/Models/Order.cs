@@ -16,7 +16,7 @@ namespace OnlineShop.Models
         public int? UserId { get; set; }
         public double? Total { get; set; }
         public int? Status { get; set; }
-        public string BankAccountNumber { get; set; }
+        public DateTime? CreateAt { get; set; }
         public string Note { get; set; }
 
         public virtual User User { get; set; }

@@ -85,19 +85,7 @@
                             <div class="row">
                                 <div class="col-md-6 offset-md-6">
                                     <div class="cart_calculation">
-                                        <form action="~/Products/CheckDiscounts" method="post">
-                                            <div class="cart--subtotal">
-                                                <p id="Price"><span>Tổng số tiền: </span>0 VNĐ</p>
-                                                <input hidden name="Sum" value="0" />
-
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="card_number">Mã giảm giá</label>
-                                                <input name="DiscountCode" id="card_number" type="text" class="text_field" placeholder="Vui lòng nhập mã giảm giá...">
-                                                <button class="btn btn--round btn--md checkout_link">Kiểm tra mã giảm giá</button>
-                                            </div>
-                                        </form>
-                                        <form action="~/Products/CheckOut" method="post">
+                                        <form action="~/CheckOut/Index" method="post">
                                             <div class="cart--total">
                                                 <p id="Sum"><span>Số tiền phải trả: </span> 0 VNĐ</p>
                                             </div>

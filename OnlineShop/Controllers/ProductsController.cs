@@ -4,20 +4,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using OnlineShop.Models;
+
 
 namespace OnlineShop.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly ShoppingContext _context;
-
-        public ProductsController(ShoppingContext context)
+        public ProductsController(ShoppingContext context, IConfiguration config)
         {
             _context = context;
+
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -33,12 +34,15 @@ namespace OnlineShop.Controllers
                 .Include(p => p.Comments)
                 .Include(p => p.Ram)
                 .Include(p => p.Rom)
+                .Include(p => p.Comments).ThenInclude(u => u.User).ThenInclude(o => o.Orders)
+                .Include(p => p.Rates)
                 .FirstOrDefaultAsync(m => m.ProductId == id);
+            product.Comments = product.Comments.OrderByDescending(c => c.CreateAt).ToList();
+            product.Rates = product.Rates.OrderByDescending(x => x.CreatAt).ToList();
             if (product == null)
             {
                 return NotFound();
             }
-
             return View(product);
         }
         [HttpPost]
@@ -48,53 +52,28 @@ namespace OnlineShop.Controllers
             {
                 return RedirectToAction(nameof(Index));
             }
-
-            //Discount NewDiscount = new Discount();
-            //NewDiscount.DiscountCode = discount.DiscountCode;
-            //NewDiscount.DiscountPercent = discount.DiscountPercent;
-            //NewDiscount.AmountOf = discount.AmountOf;
-            //NewDiscount.StartDate = discount.StartDate;
-            //NewDiscount.EndDate = discount.EndDate;
-
-            //_context.Discounts.Update(NewDiscount);
-            //await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
-
+            var user = HttpContext.Session.GetString("User");
+            DateTime createDate = DateTime.Now;
+            if (user != null)
+            {
+                User userInfo = JsonConvert.DeserializeObject<User>(user);
+                var getUser = _context.Users.FirstOrDefault(x => x.Email == userInfo.Email);
+                Comment cmt = new Comment()
+                {
+                    ProductId = comment.ProductId,
+                    UserId = getUser.UserId,
+                    Cmt = comment.Cmt,
+                    CreateAt = createDate,
+                };
+                _context.Comments.Add(cmt);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                return Redirect("~/Users/Login");
+            }
+            return Ok();
         }
-
-        //[HttpPost]
-        //public async Task<IActionResult> AddProducts(DetailOrder detailOrder)
-        //{
-
-        //    var User = HttpContext.Session.GetString("User");
-        //    if(User != null)
-        //    {
-        //        var userSession = JsonConvert.DeserializeObject<UserSession>(User);
-        //        var user = await _context.Users.FindAsync(userSession.Id);
-        //        if (user != null)
-        //        {
-        //            Order order = new Order();
-        //            order.UserId = user.UserId;
-        //            await _context.Orders.AddAsync(order);
-        //            await _context.SaveChangesAsync();
-
-        //            var OrderInDB = _context.Orders
-        //                .Where(x => x.OrderId == order.OrderId)
-        //                .FirstOrDefault(x => x.OrderId == order.OrderId);
-        //            if (OrderInDB != null)
-        //            {
-        //                DetailOrder detailOrders = new DetailOrder();
-        //                detailOrders.ProductId = detailOrder.ProductId;
-        //                detailOrders.Price = detailOrder.Price;
-        //                DateTime d = DateTime.Now;
-        //                detailOrders.DataCreate = d;
-        //            }
-        //        }
-        //    }
-        //    return RedirectToAction(nameof(Index));
-
-        //}
         public async Task<Product> GetProductAsync(int id)
         {
             Product product = await _context.Products.FindAsync(id);
@@ -117,7 +96,8 @@ namespace OnlineShop.Controllers
                    }
                 };
                 //HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(listCart));
-                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(listCart, Formatting.Indented, new JsonSerializerSettings {
+                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(listCart, Formatting.Indented, new JsonSerializerSettings
+                {
                     PreserveReferencesHandling = PreserveReferencesHandling.Objects
                 }));
             }
@@ -150,139 +130,26 @@ namespace OnlineShop.Controllers
             }
             return Ok(quantity);
         }
-
-        //Hiện thị danh sách giỏ hàng
-        public async Task<IActionResult> Cart()
-        {
-            float tmp = 0;
-            var cart = HttpContext.Session.GetString("cart");
-            if (cart != null)
-            {
-                List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(cart);
-                if (dataCart.Count > 0)
-                {
-                    ViewBag.carts = dataCart;
-                    return View(dataCart.ToList());
-                }
-            }
-
-            return View();
-        }
-        public async Task<IActionResult> DeleteCart(int id)
-            {
-            //var cart = HttpContext.Session.GetString("cart");//Kiểm tra session
-            //if (cart != null)
-            //{
-            //    List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(cart);
-
-            //    for (int i = 0; i < dataCart.Count; i++)
-            //    {
-            //        if (dataCart[i].Quantity > 1)
-            //        {
-            //            dataCart[i].Quantity -= 1;
-            //        }
-            //        else
-            //        {
-            //            dataCart.RemoveAt(i);
-            //        }
-            //    }
-            //    //HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart));
-            //    HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart, Formatting.Indented, new JsonSerializerSettings {
-            //        PreserveReferencesHandling = PreserveReferencesHandling.Objects
-            //    }));
-            //    return Ok(dataCart.Count);
-            //}
-            //return Ok();
-            var cart = HttpContext.Session.GetString("cart");
-            if (cart != null)
-            {
-                List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(cart);
-                for (int i = 0; i < dataCart.Count; i++)
-                {
-                    if(dataCart[i].product.ProductId == id && dataCart[i].Quantity > 1)
-                    {
-                        dataCart[i].Quantity -= 1;
-                    }
-
-                    else if (dataCart[i].product.ProductId == id && dataCart[i].Quantity == 1)
-                    {
-                        dataCart.RemoveAt(i);
-                    }
-                }
-                HttpContext.Session.SetString("cart", JsonConvert.SerializeObject(dataCart, Formatting.Indented,
-                new JsonSerializerSettings
-                {
-                    PreserveReferencesHandling = PreserveReferencesHandling.Objects
-                }));
-                return Ok(dataCart.Count);
-            }
-            return Ok();
-        }
-
         [HttpPost]
-        public async Task<IActionResult> CheckDiscounts(Discount discount, int Sum)
+        public async Task<IActionResult> Rate(Rate rate)
         {
-            var discounts = await _context.Discounts.FirstOrDefaultAsync(x => x.DiscountCode == discount.DiscountCode);
-            int Total = 0;
-            if (discounts != null)
+            //var user = HttpContext.Session.GetString("User");
+            //User userInfo = JsonConvert.DeserializeObject<User>(user);
+            //var getUser = _context.Users.FirstOrDefault(x => x.Email == userInfo.Email);
+            DateTime createDate = DateTime.Now;
+            Rate UserRate = new Rate()
             {
-                DateTime now = DateTime.Now;
-                if (discounts.DiscountCode == discount.DiscountCode && now >= discounts.StartDate && now <= discounts.EndDate && discounts.Used < discounts.AmountOf)
-                {
-                    Total = Sum - (int)(Sum * (discounts.DiscountPercent / 100));
-                    //var discountForDB = await _context.Discounts.FirstOrDefaultAsync(x => x.DiscountCode == discounts.DiscountCode);
-                    //discountForDB.Used += 1;
-                    //_context.Discounts.Update(discountForDB);
-                    //await _context.SaveChangesAsync();
-                    TempData["Total"] = Total;
+                UserId = rate.UserId,
+                Level = rate.Level,
+                Comments = rate.Comments,
+                CreatAt = createDate,
+                ProductId = rate.ProductId
+            };
+            _context.Rates.Add(UserRate);
 
-                    return RedirectToAction(nameof(Cart));
-                }
-            }
-            return Redirect("~/Products/Cart");
-        }
-        public async Task<IActionResult> CheckOut()
-        {
-            var User = HttpContext.Session.GetString("User");
-            if (User != null)
-            {
-                var userSession = JsonConvert.DeserializeObject<UserSession>(User);
-                var userForDB = await _context.Users.FirstOrDefaultAsync(m => m.UserId == userSession.Id);
-                if (userForDB != null)
-                {
-                    return View(userForDB);
+            await _context.SaveChangesAsync();
 
-                }
-            }
-            return Redirect("~/Users/Login");
-
-        }
-        [HttpPost]
-        public async Task<IActionResult> EditAddress(User user)
-        {
-
-            var User = HttpContext.Session.GetString("User");
-            if (User != null)
-            {
-                var userSession = JsonConvert.DeserializeObject<UserSession>(User);
-                var userForDB = await _context.Users.FindAsync(userSession.Id);
-                if (userForDB != null)
-                {
-                    userForDB.Address = user.Address;
-                    userForDB.Ward = user.Ward;
-                    userForDB.District = user.District;
-                    userForDB.City = user.City;
-
-                    _context.Users.Update(userForDB);
-                    await _context.SaveChangesAsync();
-                }
-                return RedirectToAction(nameof(CheckOut));
-            }
-            return Redirect("~/Users/Login");
-        }
-        public async Task<IActionResult> Confirm(User user, Discount discount, int Sum)
-        {
-            return View();
+            return Ok(JsonConvert.SerializeObject(UserRate));
         }
     }
 }

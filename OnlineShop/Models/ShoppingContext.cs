@@ -46,12 +46,9 @@ namespace OnlineShop.Models
             {
                 entity.HasKey(e => e.CommentsId);
 
-                entity.Property(e => e.CommentsId)
-                    .HasMaxLength(10)
-                    .HasColumnName("CommentsID")
-                    .IsFixedLength(true);
+                entity.Property(e => e.CommentsId).HasColumnName("CommentsID");
 
-                entity.Property(e => e.Cmt).HasMaxLength(250);
+                entity.Property(e => e.CreateAt).HasColumnType("datetime");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 
@@ -60,12 +57,12 @@ namespace OnlineShop.Models
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK_Comment_Product");
+                    .HasConstraintName("FK_Comments_Product");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Comment_User");
+                    .HasConstraintName("FK_Comments_User");
             });
 
             modelBuilder.Entity<DetailOrder>(entity =>
@@ -77,7 +74,7 @@ namespace OnlineShop.Models
 
                 entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
 
-                entity.Property(e => e.DataCreate).HasColumnType("date");
+                entity.Property(e => e.DiscountId).HasColumnName("DiscountID");
 
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
@@ -87,6 +84,11 @@ namespace OnlineShop.Models
                     .WithMany(p => p.DetailOrders)
                     .HasForeignKey(d => d.OrderId)
                     .HasConstraintName("FK_DetailOrder_Order1");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.DetailOrders)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK_DetailOrder_Product");
             });
 
             modelBuilder.Entity<Discount>(entity =>
@@ -95,15 +97,18 @@ namespace OnlineShop.Models
 
                 entity.Property(e => e.DiscountId).HasColumnName("DiscountID");
 
-                entity.Property(e => e.DiscountCode)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.EndDate).HasColumnType("date");
+
+                entity.Property(e => e.ManufacturerId).HasColumnName("ManufacturerID");
 
                 entity.Property(e => e.Note).HasMaxLength(250);
 
                 entity.Property(e => e.StartDate).HasColumnType("date");
+
+                entity.HasOne(d => d.Manufacturer)
+                    .WithMany(p => p.Discounts)
+                    .HasForeignKey(d => d.ManufacturerId)
+                    .HasConstraintName("FK_Discount_Manufacturer");
             });
 
             modelBuilder.Entity<Manufacturer>(entity =>
@@ -121,9 +126,7 @@ namespace OnlineShop.Models
 
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");
 
-                entity.Property(e => e.BankAccountNumber)
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
+                entity.Property(e => e.CreateAt).HasColumnType("datetime");
 
                 entity.Property(e => e.Note).HasMaxLength(250);
 
@@ -132,7 +135,7 @@ namespace OnlineShop.Models
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Order_User");
+                    .HasConstraintName("FK_Order_User1");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -140,11 +143,6 @@ namespace OnlineShop.Models
                 entity.ToTable("Product");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
-
-                entity.Property(e => e.CommentsId)
-                    .HasMaxLength(10)
-                    .HasColumnName("CommentsID")
-                    .IsFixedLength(true);
 
                 entity.Property(e => e.DiscountId).HasColumnName("DiscountID");
 
@@ -157,11 +155,6 @@ namespace OnlineShop.Models
                 entity.Property(e => e.RateId).HasColumnName("RateID");
 
                 entity.Property(e => e.RomId).HasColumnName("RomID");
-
-                entity.HasOne(d => d.CommentsNavigation)
-                    .WithMany(p => p.Products)
-                    .HasForeignKey(d => d.CommentsId)
-                    .HasConstraintName("FK_Product_Comments");
 
                 entity.HasOne(d => d.Discount)
                     .WithMany(p => p.Products)
@@ -198,9 +191,9 @@ namespace OnlineShop.Models
             {
                 entity.ToTable("Rate");
 
-                entity.Property(e => e.RateId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("RateID");
+                entity.Property(e => e.RateId).HasColumnName("RateID");
+
+                entity.Property(e => e.CreatAt).HasColumnType("datetime");
 
                 entity.Property(e => e.ProductId).HasColumnName("ProductID");
 

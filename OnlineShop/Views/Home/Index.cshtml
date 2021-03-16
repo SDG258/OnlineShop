@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OnlineShop.Models.Product>
+﻿@model IEnumerable<OnlineShop.Models.WareHouse>
 @{
     ViewData["Title"] = "Trang chủ";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -145,67 +145,70 @@
     <div class="row">
         @foreach (var item in Model)
         {
-            <div class="col-lg-4 col-md-6">
-                <div class="product product--card">
-                    <div class="product__thumbnail">
-                        <img src="~/ProductImg/@item.ImgUrl" alt="@item.NameProduct">
-                        <div class="prod_btn">
-                            <a href="~/Products/Details/@item.ProductId" class="transparent btn--sm btn--round">Thông tin</a>
-                            <button type="button" class="transparent btn--sm btn--round hover-item AddCartAjax">Thêm</button>
-                            <input hidden name="Price" value="@item.Price" />
-                            <input hidden name="ProductId" data-id="@item.ProductId" value="@item.ProductId" />
-                            <input hidden name="NameProduct" value="@item.NameProduct" />
-                            <input hidden name="DiscountId" value="@item.DiscountId " />
-                            <input hidden name="ImgUrl" value="@item.ImgUrl" />
-                        </div>
-                    </div>
-
-                    <div class="product-desc">
-                        <a href="#" class="product_title">
-                            <h4>@item.NameProduct</h4>
-                        </a>
-                        <ul class="titlebtm">
-                            <li>
-                                <img class="auth-img" src="~/User/images/auth2.jpg" alt="author image">
-                                <p>
-                                    <a href="#">@item.Manufacturer.ManufacturerName</a>
-                                </p>
-                            </li>
-                        </ul>
-                        <p><strong>Cấu hình: </strong>@item.Ram.Memory/@item.Rom.Space</p>
-                        <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; height: 32px">@item.Note</p>
-                    </div>
-
-                    <div class="product-purchase">
-                        <div class="price_love">
-                            <span>@string.Format("{0:#,##0}", item.Price)</span>
-                            <p>
-                                <span class="lnr lnr-heart"></span> 48
-                            </p>
+            if (@item.QuantityImported > @item.QuantitySold)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="product product--card">
+                        <div class="product__thumbnail">
+                            <img src="~/ProductImg/@item.Product.ImgUrl" alt="@item.Product.NameProduct">
+                            <div class="prod_btn">
+                                <a href="~/Products/Details/@item.ProductId" class="transparent btn--sm btn--round">Thông tin</a>
+                                <button type="button" class="transparent btn--sm btn--round hover-item AddCartAjax">Thêm</button>
+                                <input hidden name="Price" value="@item.Product.Price" />
+                                <input hidden name="ProductId" data-id="@item.ProductId" value="@item.ProductId" />
+                                <input hidden name="NameProduct" value="@item.Product.NameProduct" />
+                                <input hidden name="DiscountId" value="@item.Product.DiscountId" />
+                                <input hidden name="ImgUrl" value="@item.Product.ImgUrl" />
+                            </div>
                         </div>
 
-                        <div class="rating product--rating">
-                            <ul>
+                        <div class="product-desc">
+                            <a href="#" class="product_title">
+                                <h4>@item.Product.NameProduct</h4>
+                            </a>
+                            <ul class="titlebtm">
                                 <li>
-                                    <span class="fa fa-star"></span>
-                                </li>
-                                <li>
-                                    <span class="fa fa-star"></span>
-                                </li>
-                                <li>
-                                    <span class="fa fa-star"></span>
-                                </li>
-                                <li>
-                                    <span class="fa fa-star"></span>
-                                </li>
-                                <li>
-                                    <span class="fa fa-star-half-o"></span>
+                                    <img class="auth-img" src="~/User/images/auth2.jpg" alt="author image">
+                                    <p>
+                                        <a href="#">@item.Product.Manufacturer.ManufacturerName</a>
+                                    </p>
                                 </li>
                             </ul>
+                            <p><strong>Cấu hình: </strong>@item.Product.Ram.Memory/@item.Product.Rom.Space</p>
+                            <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; height: 32px">@item.Product.Note</p>
+                        </div>
+
+                        <div class="product-purchase">
+                            <div class="price_love">
+                                <span>@string.Format("{0:#,##0}", item.Product.Price)</span>
+                                <p>
+                                    <span class="lnr lnr-heart"></span> 48
+                                </p>
+                            </div>
+
+                            <div class="rating product--rating">
+                                <ul>
+                                    <li>
+                                        <span class="fa fa-star"></span>
+                                    </li>
+                                    <li>
+                                        <span class="fa fa-star"></span>
+                                    </li>
+                                    <li>
+                                        <span class="fa fa-star"></span>
+                                    </li>
+                                    <li>
+                                        <span class="fa fa-star"></span>
+                                    </li>
+                                    <li>
+                                        <span class="fa fa-star-half-o"></span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         }
     </div>
 
@@ -238,8 +241,8 @@
     $(document).ready(function () {
         $(".AddCartAjax").click(function (event) {
             event.preventDefault();
-
             tata.success('Thêm thành công', 'Đã thêm sản phẩm vào giỏ hàng', {
+                duration: 1000,
                 position: 'tr',
                 animate: 'slide'
             })

@@ -23,7 +23,9 @@ namespace OnlineShop.Controllers
         //Hiển thị danh sách sản phẩm
         public async Task<IActionResult> Index()
         {
-            var shoppingContext = _context.Products.OrderByDescending(m => m.ProductId).Include(o => o.Rom).Include(a => a.Ram).Include(m => m.Manufacturer).Include(d => d.Discount).Include(w => w.WareHouses);
+            //var shoppingContext = _context.Products.OrderByDescending(m => m.ProductId).Include(o => o.Rom).Include(a => a.Ram).Include(m => m.Manufacturer).Include(d => d.Discount).Include(w => w.WareHouses);
+            //return View(await shoppingContext.ToListAsync());
+            var shoppingContext = _context.WareHouses.OrderByDescending(m => m.Date).Include(p => p.Product).Include( m => m.Product.Manufacturer).Include(a => a.Product.Ram).Include( o => o.Product.Rom);
             return View(await shoppingContext.ToListAsync());
         }
         //public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)

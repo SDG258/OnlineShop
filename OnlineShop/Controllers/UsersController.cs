@@ -53,12 +53,7 @@ namespace OnlineShop.Controllers
                 if (verified)
                 {
                     //Save Session
-                    UserSession userSession = new UserSession()
-                    {
-                        Id = userForDb.UserId,
-                        Email = user.Email,
-                        Name = userForDb.FristName + " " + userForDb.LastName,
-                    };
+                    User userSession = userForDb;
                     HttpContext.Session.SetString("User", JsonConvert.SerializeObject(userSession));
 
                     return Redirect("~/Home/");
@@ -394,6 +389,7 @@ namespace OnlineShop.Controllers
                 return RedirectToAction(nameof(Setting));
             }
         }
+
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("User");

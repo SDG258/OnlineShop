@@ -57,23 +57,15 @@
 
     <div class="dashboard_contents">
         <div class="container">
-
-
-            <form asp-controller="User" method="post" name="add_credit_form">
-                <div class="row">
-
-                </div>
-
+            <form method="post" name="add_credit_form">
                 <div class="credit_modules">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="modules__title">
                                 <h3>Kiểm tra địa chỉ nhận hàng</h3>
                             </div>
-
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-12">
                             <div class="payment_info modules__content">
@@ -93,8 +85,8 @@
                                     <label for="card_number">Tỉnh/Thành Phố</label>
                                     <input id="card_number" type="text" class="text_field" name="City" value="@Html.DisplayFor(model => model.City)" placeholder="Nhập tỉnh/Tp chỉ ở đây">
                                 </div>
-                                <button type="submit" class="btn btn--round btn--default" formaction="EditAddress">Cập nhật địa chỉ</button>
-                                <button style="float: right;" type="submit" class="btn btn--round btn--default" formaction="Confirm">Xác nhận đơn hàng</button>
+                                <button type="submit" class="btn btn--round btn--default" asp-action="EditAddress">Cập nhật địa chỉ</button>
+                                <button style="float: right;" type="submit" class="btn btn--round btn--default" asp-action="Confirm">Xác nhận đơn hàng</button>
                             </div>
                         </div>
                     </div>
