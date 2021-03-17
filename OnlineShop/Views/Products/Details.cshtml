@@ -17,62 +17,6 @@
                     <div class="prev-slide">
                         <img src="~/ProductImg/@Html.DisplayFor(model => model.ImgUrl)" alt="@Html.DisplayFor(model => model.NameProduct)">
                     </div>
-
-                    <div class="item__preview-thumb">
-                        <div class="item-action">
-                            <div class="action-btns">
-                                <a href="#" class="btn btn--round btn--lg">Live Preview</a>
-                                <a href="#" class="btn btn--round btn--lg btn--icon">
-                                    <span class="lnr lnr-heart"></span>Danh sách yêu thích
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="item_social_share">
-                            <p>
-                                <img src="~/User/images/svg/share.svg" alt="This is share svg">
-                                <span>Chia sẽ</span>
-                            </p>
-
-                            <div class="social social--color--filled">
-                                <ul>
-                                    <li>
-                                        <a href="#">
-                                            <span class="fa fa-facebook"></span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span class="fa fa-twitter"></span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span class="fa fa-google-plus"></span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span class="fa fa-pinterest"></span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span class="fa fa-linkedin"></span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <span class="fa fa-dribbble"></span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-
-                        </div>
-                    </div>
-
-
                 </div>
 
                 <div class="item-info">
@@ -121,11 +65,14 @@
                                                     </a>
                                                 </div>
                                                 <div class="media-body">
-                                                    <form action="~/Products/AddCmt" method="post" class="comment-reply-form">
-                                                        <textarea name="Cmt" placeholder="Viết bình luận về sản phẩm..."></textarea>
-                                                        <input hidden name="ProductId" value="@Model.ProductId" />
-                                                        <button style="float:right;" class="btn btn--sm btn--round">Gửi bình luận</button>
-                                                    </form>
+                                                    @*<form action="~/Products/AddCmt" method="post" class="comment-reply-form">*@
+                                                    @*<textarea name="Cmt" id="Cmt" placeholder="Viết bình luận về sản phẩm..."></textarea>*@
+                                                    <textarea name="Comments" id="Comments" placeholder="Viết bình luận về sản phẩm..."></textarea>
+
+                                                    <input hidden name="ProductId" value="@Model.ProductId" />
+                                                    <button style="float:right;" class="btn btn--sm btn--round" onclick="AddCmt()">Gửi bình luận</button>
+
+                                                    @*</form>*@
                                                 </div>
                                             </div>
                                         </div>
@@ -647,33 +594,49 @@
         });
 
     }
+    function AddCmt() {
+        let comment = $("#Comments").val();
+         $.ajax({
+            type: "POST",
+            async: false,
+            url: "@Url.Action("AddCmt", "Products")",
+            data: {
+                ProductId: @Html.DisplayFor(model => model.ProductId),
+                Cmt: comment
+            },
+            success: function () {
+                tata.success('Thêm thành công', 'Đã thêm bình luận thàng công', {
+                    duration: 1000,
+                    position: 'tr',
+                    animate: 'slide'
+                })
+            },
+         });
+    }
     function Rate() {
-        if (@user != null) {
-            @{ var x = JsonConvert.DeserializeObject<User>(user);}
+        @*if (@user != null) {
+            @{ var x = JsonConvert.DeserializeObject<User>(user);}*@
             let comment = $("#Comments").val();
-            let UserId = @x.UserId;
-            tata.success('Thêm thành công', 'Đã thêm bình luận cho sản phẩn thàng công', {
-            duration: 1000,
-            position: 'tr',
-            animate: 'slide'
-            })
+            @*let UserId = @x.UserId;*@
             $.ajax({
                 type: "POST",
                 async: false,
                 url: "@Url.Action("Rate", "Products")",
                 data: {
                     ProductId: @Html.DisplayFor(model => model.ProductId),
-                    UserId: UserId,
+                    UserId: 2,
                     Level: rate,
                     Comments: comment
                 },
                 success: function (data) {
-                        console.log(data);
-                        console.log(data.UserId);
-
-                    },
+                    tata.success('Thêm thành công', 'Đã thêm bình luận cho sản phẩn thàng công', {
+                        duration: 1000,
+                        position: 'tr',
+                        animate: 'slide'
+                    })
+                },
             });
-        }
+        //}
     }
     $(document).ready(function () {
         $(".AddCartAjax").click(function (event) {

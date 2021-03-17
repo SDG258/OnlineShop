@@ -36,22 +36,6 @@ namespace OnlineShop.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Test()
-        {
-            float tmp = 0;
-            var cart = HttpContext.Session.GetString("cart");
-            if (cart != null)
-            {
-                List<Cart> dataCart = JsonConvert.DeserializeObject<List<Cart>>(cart);
-                if (dataCart.Count > 0)
-                {
-                    ViewBag.carts = dataCart;
-                    return View(dataCart.ToList());
-                }
-            }
-            return View();
-        }
-
         public async Task<IActionResult> DeleteCart(int id)
         {
             var cart = HttpContext.Session.GetString("cart");
