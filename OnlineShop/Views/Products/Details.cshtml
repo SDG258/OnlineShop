@@ -86,6 +86,7 @@
                                 }
                                 <ul class="media-list thread-list">
                                     @{
+                                        <div id="comment"></div>
                                         if (Model.Comments.Count >= 1)
                                         {
                                             @foreach (var item in Model.Comments)
@@ -104,7 +105,6 @@
                                                                     <h4>@item.User.LastName</h4>
                                                                     <span>@item.CreateAt</span>
                                                                 </div>
-                                                                @*<span class="comment-tag buyer">@item.</span>*@
                                                             </div>
                                                             <p>
                                                                 @item.Cmt
@@ -164,7 +164,7 @@
                                                 <div style="padding-left: 5px; padding-top: 5px;" class="comment-form-area">
                                                     <div class="media comment-form">
                                                         <div class="media-body">
-                                                            <textarea name="Comments" id="Comments" placeholder="Viết bình đánh giá về sản phẩm..."></textarea>
+                                                            <textarea name="CMT" id="CMT" placeholder="Viết bình đánh giá về sản phẩm..."></textarea>
                                                             <input hidden name="ProductId" value="@Model.ProductId" />
                                                             <button style="float: right;" class="btn btn--sm btn--round" onclick="Rate()">Gửi đánh giá</button>
                                                         </div>
@@ -213,7 +213,6 @@
                                                                         }
                                                                     </div>
                                                                 </div>
-                                                                @*<span class="comment-tag buyer"></span>*@
                                                             </div>
                                                             <p>
                                                                 @item.Comments
@@ -609,15 +608,15 @@
                     duration: 1000,
                     position: 'tr',
                     animate: 'slide'
+
                 })
+                location.reload();
             },
          });
     }
     function Rate() {
-        @*if (@user != null) {
-            @{ var x = JsonConvert.DeserializeObject<User>(user);}*@
-            let comment = $("#Comments").val();
-            @*let UserId = @x.UserId;*@
+        let comment = $("#CMT").val();
+        console.log(comment);
             $.ajax({
                 type: "POST",
                 async: false,
@@ -628,12 +627,14 @@
                     Level: rate,
                     Comments: comment
                 },
-                success: function (data) {
-                    tata.success('Thêm thành công', 'Đã thêm bình luận cho sản phẩn thàng công', {
+                success: function () {
+                    tata.success('Thêm thành công', 'Đã thêm bình luận thàng công', {
                         duration: 1000,
                         position: 'tr',
                         animate: 'slide'
+
                     })
+                    location.reload();
                 },
             });
         //}
